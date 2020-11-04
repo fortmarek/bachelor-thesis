@@ -12,7 +12,7 @@
 
 \documentclass[thesis=B,english]{FITthesis}[2019/12/23]
 
-%\usepackage[utf8]{inputenc} % LaTeX source encoded as UTF-8
+\usepackage[utf8]{inputenc} % LaTeX source encoded as UTF-8
 % \usepackage[latin2]{inputenc} % LaTeX source encoded as ISO-8859-2
 % \usepackage[cp1250]{inputenc} % LaTeX source encoded as Windows-1250
 
@@ -102,12 +102,26 @@ Let me now introduce you to the structure of the rest of the thesis:
 
 \end{itemize}
 
+\section{Literary Research}
+
+\textbf{This will not be part of the final version of the thesis}
+
+In the literary research I will need to study the current literature for the theoretical background of finite automata. In \autoref{chap:theory} I will use the literature to explain the concepts and terms that are necessary to understand the rest of the thesis. 
+
+For \autoref{chap:analysis} I will need to go through current implementations of automata editors, assessing what value they provide and making sure my thesis is, indeed, creating something new. This can also prove to be helpful during the implementation as I can be inspired by projects that have already been made.
+
+\autoref{chap:design} is concerned with design of the editor - the literature will be focused on the UX and UI of interactive editors, not limited to finite automata. Besides that, I will also study available methods for discerning automata shapes drawn by hand and going through already available technology on this topic. Last but not least, I will go over the architectural design in the form of Composable Architecture - this will encompass studying other functional and non-functional architectures. This part of research will also include research on SwiftUI and how it compares with UIKit (UI framework predecessor) and other declarative libraries such as React for web. 
+
+
 \setsecnumdepth{all}
 \chapter{Theory}
+\label{chap:theory}
 
 \chapter{Analysis}
+\label{chap:analysis}
 
 \chapter{Automata Editor Design}
+\label{chap:design}
 
 \chapter{Implementation}
 \label{chap:implementation}
@@ -124,7 +138,7 @@ One of the goals of this thesis was to assess the usability of new iOS programmi
 
 The main goal of this project was to create a prototype of automata editor for iPad while showcasing the Algorithms Library Toolkit that is being continuously developed at FIT CTU.
 
-I have successfully implemented editing and simulating input for finite automata and Algorithms Library Toolkit to the editor if someone wants to see its capabilities.
+I have successfully implemented editing and simulating input of finite automata while creating a good example of capabalities of Algorithms Library Toolkit.
 
 One of the other requirements of the automata editor has been to discern automata elements from shapes drawn by hand on the device. The solution chosen during the analysis made this possible as has been described in more detail in \autoref{chap:implementation}.
 
@@ -136,7 +150,7 @@ The contribution of this thesis is testing Algorithms Library Toolkit in practic
 
 Algorithms Library Toolkit is an extensive library and there are still capabilites that are not implemented in the editor.
 
-The choice of developing a native iOS application has resulted in good UX, but in the future it would be beneficial to broaden the possible audience and either developer a similar Android app or create a ubiquituous web interface.
+The choice of developing a native iOS application has resulted in good UX, but in the future it would be beneficial to broaden the possible audience and either develop a similar Android app or create a more ubiquituous web interface.
 
 \setsecnumdepth{part}
 
