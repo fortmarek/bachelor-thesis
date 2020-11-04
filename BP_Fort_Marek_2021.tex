@@ -110,12 +110,33 @@ Let me now introduce you to the structure of the rest of the thesis:
 \chapter{Automata Editor Design}
 
 \chapter{Implementation}
+\label{chap:implementation}
 
 \chapter{User testing}
 
 \chapter{SwiftUI and Composable Architecture Assessment}
 
 \chapter{Conclusion}
+
+\section{Goals Assessment}
+
+One of the goals of this thesis was to assess the usability of new iOS programming paradigm of SwiftUI with the new functional architecture pattern Composable Architecture. This combination has proven to be beneficial and it is a good option for new iOS applications.
+
+The main goal of this project was to create a prototype of automata editor for iPad while showcasing the Algorithms Library Toolkit that is being continuously developed at FIT CTU.
+
+I have successfully implemented editing and simulating input for finite automata and Algorithms Library Toolkit to the editor if someone wants to see its capabilities.
+
+One of the other requirements of the automata editor has been to discern automata elements from shapes drawn by hand on the device. The solution chosen during the analysis made this possible as has been described in more detail in \autoref{chap:implementation}.
+
+\section{Thesis Contribution}
+
+The contribution of this thesis is testing Algorithms Library Toolkit in practice and can now be pointed to for users who want to see its capabilities. The editor can now also be recommended in the course of BI-AAG at FIT CTU (and other universities) - for students and teachers alike.
+
+\section{Future Work}
+
+Algorithms Library Toolkit is an extensive library and there are still capabilites that are not implemented in the editor.
+
+The choice of developing a native iOS application has resulted in good UX, but in the future it would be beneficial to broaden the possible audience and either developer a similar Android app or create a ubiquituous web interface.
 
 \setsecnumdepth{part}
 
@@ -128,8 +149,8 @@ Let me now introduce you to the structure of the rest of the thesis:
 \chapter{Acronyms}
 % \printglossaries
 \begin{description}
-	\item[GUI] Graphical user interface
-	\item[XML] Extensible markup language
+	\item[GUI] Graphical user interface 
+	\item[UX] User experience 
 \end{description}
 
 
@@ -140,13 +161,13 @@ Let me now introduce you to the structure of the rest of the thesis:
 \begin{figure}
 	\dirtree{%
 		.1 readme.txt\DTcomment{the file with CD contents description}.
-		.1 exe\DTcomment{the directory with executables}.
 		.1 src\DTcomment{the directory of source codes}.
-		.2 wbdcm\DTcomment{implementation sources}.
+		.2 editor\DTcomment{implementation sources}.
 		.2 thesis\DTcomment{the directory of \LaTeX{} source codes of the thesis}.
 		.1 text\DTcomment{the thesis text directory}.
 		.2 thesis.pdf\DTcomment{the thesis text in PDF format}.
-		.2 thesis.ps\DTcomment{the thesis text in PS format}.
+		.1 usertesting.pdf\DTcomment{the directory of source codes}.
+		.1 editor\DTcomment{directory of screenshots from the editor}.
 	}
 \end{figure}
 
