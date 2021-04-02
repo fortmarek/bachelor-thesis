@@ -11,7 +11,7 @@ This questionnaire will be used to assess users' previous experience that can th
 # Introduction to the Test
 
 The participants should be instructed to perform tasks described below.
-Tasks will be in a random order and the participants will not know the tasks in advance. This is to simulate as much as possible how users would interact with the app outside of the testing environment.
+Tasks A-D and E-F will be in a random order where the first group should be first and the participants will not know the tasks in advance. This is to simulate as much as possible how users would interact with the app outside of the testing environment.
 
 Participants will be asked to share their thought process aloud - if they are comfortable with it.
 
@@ -27,6 +27,20 @@ Simulate following inputs:
 - AA
 - BA
 - B
+- AAA
+- ABA
+- A
+
+Then modify this automaton without clearing the canvas in such a way that it represent this automaton:
+
+![](basic_automaton_2.png)
+
+And simulate following inputs:
+- ABBA
+- ABAABA
+- AAA
+- BAB
+- BBB
 
 ### Task B:
 
@@ -38,6 +52,10 @@ Simulate following inputs:
 - DDE
 - DEF
 - DE
+- EF
+- EFE
+- DDDDE
+- DDDDF
 
 ### Task C:
 
@@ -45,6 +63,7 @@ Create the following automaton:
 
 ![](bidirectional_automaton.png)
 
+Simulate following inputs:
 - 010101
 - 001011
 - 1001
@@ -56,6 +75,7 @@ Create the following automaton:
 
 ![](epsilon_automaton.png)
 
+Simulate following inputs:
 - A
 - BA
 - AB
@@ -65,18 +85,11 @@ Create the following automaton:
 Create automaton for the following language:
 L = {(10)^n : n ε Ν}
 
-Simulate following inputs:
-- 101
-- 1010
-- 101010
-- 1
+Simulate at least 4 inputs to test whether the automaton is behaving correctly
 
 ### Task F:
 
 Create automaton for the following language: 
 L = { w : w ε {0,1}* Λ w starts with the string 011}
 
-Simulate following inputs:
-- 01
-- 0111
-- 0110
+Simulate at least 4 inputs to test whether the automaton is behaving correctly
