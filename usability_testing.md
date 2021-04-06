@@ -11,7 +11,7 @@ This questionnaire will be used to assess users' previous experience that can th
 # Introduction to the Test
 
 The participants should be instructed to perform tasks described below.
-Tasks A-D and E-F will be in a random order where the first group should be first and the participants will not know the tasks in advance. This is to simulate as much as possible how users would interact with the app outside of the testing environment.
+Tasks A-C and D-E will be in a random order where the first group should be first and the participants will not know the tasks in advance. This is to simulate as much as possible how users would interact with the app outside of the testing environment.
 
 Participants will be asked to share their thought process aloud - if they are comfortable with it.
 
@@ -57,19 +57,8 @@ Simulate following inputs:
 - DDDDE
 - DDDDF
 
+
 ### Task C:
-
-Create the following automaton:
-
-![](bidirectional_automaton.png)
-
-Simulate following inputs:
-- 010101
-- 001011
-- 1001
-
-
-### Task D:
 
 Create the following automaton:
 
@@ -81,13 +70,13 @@ Simulate following inputs:
 - AB
 - ABB
 
-### Task E:
+### Task D:
 Create automaton for the following language:
 L = {(10)^n : n ε Ν}
 
 Simulate at least 4 inputs to test whether the automaton is behaving correctly
 
-### Task F:
+### Task E:
 
 Create automaton for the following language: 
 L = { w : w ε {0,1}* Λ w starts with the string 011}

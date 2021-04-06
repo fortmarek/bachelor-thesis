@@ -1,0 +1,468 @@
+% Template for theses recommended at Czech Technical University, Faculty of Information Technology
+% inspired by lipics-v2019 documentclass
+% Questions and help: <ondrej.guth@fit.cvut.cz>
+% 2021: work in progress
+
+\documentclass[a4paper,english,unicode,twoside]{book}[2019/12/20]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% FILL IN THIS INFORMATION
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\thesistitle}{Finite Automata iPad Editor}
+\newcommand{\thesistype}{Bachelor's Thesis}
+\newcommand{\thesisauthor}{Marek Fořt}
+\newcommand{\supervisor}{Ing.\,Jiří Trávníček,\,Ph.D.}
+\newcommand{\department}{Department of Theoretical Informatics}
+\newcommand{\yearofdefence}{2021}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% END FILL IN
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% TEMPLATE SETTINGS
+% no need to modify anything within this section
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{\thesistitle}
+\author{\thesisauthor}
+\RequirePackage{babel}[2020/07/13] %localization
+\RequirePackage{iftex}[2020/03/06]
+\iftutex
+    \RequirePackage{ellipsis}[2020/05/22] %ellipsis workaround for XeLaTeX
+\else
+    \RequirePackage[utf8]{inputenc}[2018/08/11] %this file encoding
+    \RequirePackage{lmodern}[2009/10/30]
+\fi
+\RequirePackage[bottom=4cm,footskip=4em]{geometry}[2020/01/02] %page layout
+\RequirePackage{setspace}[2011/12/19] %line spacing in title page
+\RequirePackage{listings}[2020/03/24]
+\RequirePackage{xcolor}[2016/05/11]
+\RequirePackage{multicol}[2019/12/09]
+\RequirePackage{titlesec}[2019/10/16]
+\RequirePackage{mathtools}[2020/03/24]
+\RequirePackage{amssymb}[2013/01/14]
+\RequirePackage[pdfpagelayout=TwoPageRight]{hyperref}[2020-05-15] % optional package
+\RequirePackage{pdfpages}[2020/01/28]
+\RequirePackage{fancyhdr}[2019/01/31]
+\RequirePackage[labelsep=space,singlelinecheck=false,font={up,small},labelfont={sf,bf}]{caption}[2020/05/30]
+\RequirePackage{amsthm}[2020/05/29]
+\RequirePackage{emptypage}[2010/05/30]
+\RequirePackage{biblatex}
+
+%%% modra
+ \definecolor{decoration}{RGB}{0, 122, 195} %CTU blue
+ \definecolor{heading}{RGB}{0, 122, 195}
+ \definecolor{headbackgroundgray}{RGB}{199, 219, 241} %light blue
+ \definecolor{backgroundgray}{RGB}{199, 219, 241} %CTU light blue
+ \definecolor{headgray}{rgb}{0.50,0.50,0.51}
+ \definecolor{enumgray}{RGB}{0, 122, 195} %CTU blue
+
+\addbibresource{bib-database.bib}
+
+\setcounter{secnumdepth}{4}% numbering sections; 4: subsubsection
+
+% code listing settings
+\renewcommand\lstlistingname{Výpis kódu}
+\renewcommand\lstlistlistingname{Seznam výpisů kódu}
+\lstset{basicstyle=\small\ttfamily,keywordstyle=\bfseries,%
+        backgroundcolor=\color{backgroundgray},%
+        frame=single,framerule=0pt,xleftmargin=\fboxsep,xrightmargin=\fboxsep}
+% code listing setting end
+
+% captions settings
+\makeatletter
+\@ifpackagelater{hyperref}{2009/12/09}
+  {\captionsetup{compatibility=false}}%cf. http://groups.google.de/group/comp.text.tex/browse_thread/thread/db9310eb540fbbd8/42e30f3b7b3aa17a?lnk=raot
+  {}
+\makeatother
+\DeclareCaptionLabelFormat{boxed}{%0.61,0.61,0.61
+  \kern0.05em{\color{decoration}\rule{0.73em}{0.73em}}%
+  \hspace*{0.67em}\bothIfFirst{#1}{~}#2}
+\captionsetup{labelformat=boxed}
+\captionsetup[table]{position=top}
+% captions settings end
+
+% lists settings
+\setlength\leftmargini  \parindent
+\setlength\leftmarginii {1.2em}
+\setlength\leftmarginiii{1.2em}
+\setlength\leftmarginiv {1.2em}
+\setlength\leftmarginv  {1.2em}
+\setlength\leftmarginvi {1.2em}
+\renewcommand\labelenumi{%
+  \textcolor{enumgray}{\headfont\bfseries\upshape\mathversion{bold}\theenumi.}}
+\renewcommand\labelenumii{%
+  \textcolor{enumgray}{\headfont\bfseries\upshape\mathversion{bold}\theenumii.}}
+\renewcommand\labelenumiii{%
+  \textcolor{enumgray}{\headfont\bfseries\upshape\mathversion{bold}\theenumiii.}}
+\renewcommand\labelenumiv{%
+  \textcolor{enumgray}{\headfont\bfseries\upshape\mathversion{bold}\theenumiv.}}
+\makeatletter
+\renewcommand\labelitemi{%
+  \textcolor{enumgray}{\ifnum\@listdepth=\@ne
+                                  \rule{0.67em}{0.33em}%
+                                \else
+                                  \rule{0.45em}{0.225em}%
+                                \fi}}
+\makeatother
+\renewcommand\labelitemii{%
+  \textcolor{enumgray}{\rule{0.45em}{0.225em}}}
+\renewcommand\labelitemiii{%
+  \textcolor{enumgray}{\headfont\bfseries\textasteriskcentered}}
+\renewcommand\labelitemiv{%
+  \textcolor{enumgray}{\headfont\bfseries\textperiodcentered}}
+\renewcommand*\descriptionlabel[1]{%
+  \hspace\labelsep\textcolor{enumgray}{\headfont\bfseries\mathversion{bold}#1}}
+% lists settings end
+
+\def\headfont{\rmfamily} %font for headings (chapter, section, etc.)
+
+% frontmatter headings
+\def\frontchapterfont{\Large \bfseries}
+\def\frontsectionfont{\large\bfseries}
+\def\frontsubsectionfont{\large}
+\def\frontsubsubsectionfont{\bfseries}
+% frontmatter headings end
+
+% frontmatter pseudochapters: named part without printing actual chapter heading
+\makeatletter
+\newcommand{\frontchapternotprinted}[1]{%
+  \begingroup
+  \let\@makechapterhead\@gobble % make \@makechapterhead do nothing
+  \let\cleardoublepage\clearpage
+  \chapter{#1}
+  \endgroup
+}
+\makeatother
+% frontmatter pseudochapters end
+
+% theorems, proofs, definitions, etc. end
+\makeatletter
+\thm@headfont{%
+  \textcolor{decoration}{$\blacktriangleright$}\nobreakspace\headfont\bfseries}
+\def\th@remark{%
+  \thm@headfont{%
+    \textcolor{decoration}{$\blacktriangleright$}\nobreakspace\headfont}%
+  \normalfont % body font
+  \thm@preskip\topsep \divide\thm@preskip\tw@
+  \thm@postskip\thm@preskip
+}
+\def\@endtheorem{\endtrivlist}%\@endpefalse
+\renewcommand\qedsymbol{\textcolor{decoration}{\ensuremath{\blacktriangleleft}}}
+\renewenvironment{proof}[1][\proofname]{\par
+  \pushQED{\qed}%
+  \normalfont \topsep6\p@\@plus6\p@\relax
+  \trivlist
+  \item[\hskip\labelsep
+        \color{black}\headfont\bfseries
+    #1\@addpunct{.}]\ignorespaces
+}{%
+  \popQED\endtrivlist%\@endpefalse
+}
+\makeatother
+\theoremstyle{plain}
+\newtheorem{theorem}{Věta}
+\newtheorem{lemma}[theorem]{Pomocné tvrzení}
+\newtheorem{corollary}[theorem]{Důsledek}
+\newtheorem{proposition}[theorem]{Návrh}
+\newtheorem{definition}[theorem]{Definice}
+\theoremstyle{definition}
+\newtheorem{example}[theorem]{Příklad}
+\theoremstyle{remark}
+\newtheorem{note}[theorem]{Poznámka}
+\newtheorem*{note*}{Poznámka}
+\newtheorem{remark}[theorem]{Pozorování}
+\newtheorem*{remark*}{Pozorování}
+\numberwithin{theorem}{chapter}
+% theorems, proofs, definitions, etc. end
+
+% table of contents colored chapters
+\makeatletter
+\let\stdl@chapter\l@chapter
+\renewcommand*{\l@chapter}[2]{%
+  \stdl@chapter{\textcolor{heading}{#1}}{\textcolor{heading}{#2}}}
+\makeatother
+% table of contents colored chapters end
+
+% headers and footers
+\makeatletter
+\def\ps@plain{%chapter beginning
+    \let\@evenhead\@empty%
+    \let\@oddhead\@empty%
+    \def\@evenfoot{\bfseries\color{headgray}\hfill\thepage\hfill}%
+    \def\@oddfoot{\bfseries\color{headgray}\hfill\thepage\hfill}}
+\makeatother
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+\renewcommand{\sectionmark}[1]{\markright{#1}}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE]{\leavevmode\smash{\llap{\color{headgray} \bfseries \thepage \hspace*{4em}}}}
+\fancyhead[RE]{\color{headgray}\bfseries\nouppercase{\leftmark}}
+\fancyhead[RO]{\leavevmode\smash{\rlap{\hspace*{4em}\color{headgray}\bfseries\thepage}}}
+\fancyhead[LO]{\color{headgray}\bfseries\nouppercase{\rightmark}}
+\renewcommand{\headrulewidth}{0pt}
+% headers and footers end
+
+% title page
+\renewcommand{\maketitle}{\begin{titlepage}%
+\newgeometry{left=67mm,top=80mm,right=40mm}%\thispagestyle{empty}%
+\noindent{\large\headfont\noindent\thesistype}
+\vskip 3mm
+\noindent{\noindent\huge\headfont\bfseries\color{black}\begin{flushleft}\begin{onehalfspace}\MakeUppercase{\thesistitle}\end{onehalfspace}\end{flushleft}}
+\vskip 35mm
+\noindent{\large \headfont \bfseries \thesisauthor}
+
+\vfill
+
+\noindent{\headfont Czech Technical University, Faculty of Information Technology\\
+\department\\
+Supervisor: \supervisor\\
+\today}\end{titlepage}
+\restoregeometry
+}
+%title page end
+
+\newenvironment{abstrakt}{%
+  \vspace*{18mm}
+  \noindent
+  {{\frontchapterfont\begin{flushleft}{\color{heading}Abstrakt}\end{flushleft}}}%
+  \bigskip
+  \noindent\ignorespaces}
+
+\newenvironment{abstract}{%
+  \vskip\bigskipamount
+  \noindent
+  {{\frontchapterfont\begin{flushleft}{\color{heading}Abstract}\end{flushleft}}}%
+  \bigskip
+  \noindent\ignorespaces}
+  
+\newenvironment{acknowledgment}{
+  {{\frontchapterfont\begin{flushright}{\color{heading}Acknowledgment}\end{flushright}}}%
+  \bigskip
+  \noindent\ignorespaces}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% TEMPLATE SETTINGS END
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%
+% DEMO CONTENTS SETTINGS
+% You may choose to modify this part.
+%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{dirtree}
+\usepackage{lipsum,tikz}
+%%%%%%%%%%%%%%%%%%%%%%
+% DEMO CONTENTS SETTINGS END
+%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\frontmatter
+%%%%%%%%%%%%%%
+% FRONTMATTER SETTINGS
+% no need to modify this part
+%%%%%%%%%%%%%%
+\titleformat
+{\chapter} % command
+% [display] % shape
+{} % format
+{} % label
+{} % sep
+{\color{heading}\frontchapterfont \raggedleft} % before-code
+[\vskip -2em] % after-code
+
+\titleformat
+{\section}
+{\frontsectionfont\color{heading}}
+{}
+{}
+{}
+  
+% \titleformat{\subsection}
+%   {\frontsubsectionfont\color{heading}}{{{\color{black}\thesubsection}}}{1em}{}[\vskip -1em]
+  
+% \titleformat{\subsubsection}
+%   {\frontsubsubsectionfont\color{heading}}{{{\color{black}\thesubsubsection}}}{1em}{}[\vskip -1em]
+
+\makeatletter
+\@openrightfalse
+\makeatother
+%%%%%%%%%%%%%%
+% FRONTMATTER SETTINGS END
+%%%%%%%%%%%%%%
+
+
+\includepdf{assignment-include.pdf}
+
+\thispagestyle{empty}
+\cleardoublepage
+
+\maketitle
+% \clearpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PREPRINT
+% no need to modify
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+	\clearpage
+	\thispagestyle{empty}
+	
+
+		~
+	\vfill
+	
+	{\small
+			\noindent Czech Technical University in Prague \\
+		\noindent Faculty of Information Technology \\
+	\noindent \textcopyright{} \yearofdefence{} \thesisauthor.\\
+		\noindent \textit{This thesis is school work as defined by Copyright Act of the Czech Republic.It  has  been  submitted  at  Czech  Technical  University  in  Prague,  Faculty  ofInformation Technology.  The thesis is protected by the Copyright Act and itsusage without author’s permission is prohibited (with exceptions defined by theCopyright Act).}
+	
+	\vspace{1em}
+	
+	\noindent Citation of this thesis: \thesisauthor. \textit{\thesistitle}. \thesistype. Czech Technical University, Faculty of Information Technology, \yearofdefence.
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PREPRINT END
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\tableofcontents
+\listoffigures
+\begingroup
+\let\clearpage\relax
+\listoftables
+\lstlistoflistings
+\endgroup
+
+
+%%%%%%%%%%%%%%%%%%%
+% ACKNOWLEDGMENT
+% FILL IN / MODIFY
+%%%%%%%%%%%%%%%%%%%
+\frontchapternotprinted{Acknowledgment}
+~
+\vfill
+% INSTRUCTIONS
+% ENG: choose one of approved texts of the declaration. DO NOT CREATE YOUR OWN. Find the approved texts at https://courses.fit.cvut.cz/SFE/download/index.html#_documents (document Declaration for FT in English)
+% CZE/SLO: Vyberte jedno z fakultou schvalenych prohlaseni. NEVKLADEJTE VLASTNI TEXT. Schvalena prohlaseni najdete zde: https://courses.fit.cvut.cz/SZZ/dokumenty/index.html#_dokumenty (prohlášení do ZP)
+\begin{acknowledgment}
+I  hereby  declare  that  the  presented  thesis  is  my  own  work  and  that  I  have  cited  all sources  of  information  in  accordance  with  the  Guideline  for  adhering  to  ethical principles when elaborating an academic final thesis.I acknowledge that my thesis is subject to the rights and obligations stipulated by the Act  No.  121/2000  Coll.,  the  Copyright  Act,  as  amended,  in  particular  that  the  Czech Technical  University  in  Prague  has  the  right  to  conclude  a  license  agreement  on  the utilization  of  this  thesis  as  a  school  work  under  the  provisions  of  Article  60(1)  of  the Act.
+\vskip 1cm
+\noindent
+In Prague on 13th May 2021 \hspace{.3\textwidth} \dotfill
+\end{acknowledgment}
+%%%%%%%%%%%%%%%%%%%
+% DECLARATION END
+%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%
+% ABSTRACT
+% FILL IN / MODIFY
+%%%%%%%%%%%%%%%%%%%
+\frontchapternotprinted{Abstract}
+
+\begin{abstract}% Enter abstract in ENGLISH.
+\lipsum[2]  
+\end{abstract}
+
+\vskip 0.5cm
+
+{\noindent\color{heading}\bfseries\headfont Keywords\hspace{1em}}{iPad application,  finite automata,  interactive editor,  AlgorithmsLibrary Toolkit, Composable Architecture, Swift}
+%%%%%%%%%%%%%%%%%%%
+% ABSTRACT END
+%%%%%%%%%%%%%%%%%%%
+
+\mainmatter
+
+%%%%%%%%%%%%%%%%%%%%
+% MAINMATTER SETTINGS
+% no need to modify this part
+%%%%%%%%%%%%%%%%%%%%
+\makeatletter
+\@openrighttrue
+\makeatother
+
+\titleformat
+{\chapter} % command
+[display] % shape
+{\headfont \LARGE \bfseries \raggedleft} % format
+{ \textcolor{headbackgroundgray}{{\titlerule*[1pc]{\rule{0.25em}{0.25em}}}} \hspace{0.5ex} \color{black} Chapter \thechapter } % label
+{-0.3cm} % sep
+{\color{heading} \Huge \vskip 0.5cm} % before-code
+[\vskip 1cm] % after-code
+
+%vzhled nadpisů sekcí
+\titleformat{\section}
+  {\headfont\Large\bfseries\color{heading}}{\colorbox{headbackgroundgray}{{\color{black}\thesection}}}{1em}{}%[\vskip -1em]
+  
+\titleformat{\subsection}
+  {\headfont\Large\bfseries\color{heading}}{{{\color{black}\thesubsection}}}{1em}{}%[\vskip -1em]
+  
+\titleformat{\subsubsection}
+  {\headfont\large\bfseries\color{heading}}{{{\color{black}\thesubsubsection}}}{1em}{}%[\vskip -1em]
+
+%%%%%%%%%%%%%%%%%%%%
+% MAINMATTER SETTINGS END
+%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%
+% THE THESIS
+% MODIFY ANYTHING BELOW THIS LINE
+%%%%%%%%%%%%%%%%%%%
+\include{text}
+
+%%%%%%%%%%%%%%%%%%%
+% ABBREVIATIONS
+% FILL IN / MODIFY
+% OR REMOVE ENTIRELY
+%%%%%%%%%%%%%%%%%%%
+\chapter{List of Abbreviations}
+	
+\begin{tabular}{rl}
+DFA & Deterministic Finite Automaton\\
+FA & Finite Automaton\\
+LPS & Labelled Prüfer Sequence\\
+NFA & Nondeterministic Finite Automaton\\
+NPS & Numberef Prüfer Sequence\\
+TPA & Tree Paths Automaton\\
+TSPA & Tree String Paths Subsequences Automaton\\
+XML & Extensible Markup Language\\
+XPath & XML Path Language\\
+XSLT & eXtensible Stylesheet Language Transformations\\
+W3C & World Wide Web Consortium
+\end{tabular}
+%%%%%%%%%%%%%%%%%%%
+% ABBREVIATIONS END
+%%%%%%%%%%%%%%%%%%%
+
+\appendix
+
+%%%%%%%%%%%%%%%%%%%%
+% APPENDIX SETTINGS
+% no need to modify this part
+%%%%%%%%%%%%%%%%%%%%
+\titleformat
+{\chapter} % command
+[display] % shape
+{\headfont \LARGE \bfseries \raggedleft} % format
+{ \textcolor{headbackgroundgray}{{\titlerule*[1pc]{\rule{0.25em}{0.25em}}}} \hspace{0.5ex} \color{black} Příloha \thechapter } % label
+{-0.3cm} % sep
+{\color{heading} \Huge \vskip 0.5cm} % before-code
+[\vskip 1cm] % after-code
+
+%%%%%%%%%%%%%%%%%%%%
+% MAINMATTER SETTINGS END
+%%%%%%%%%%%%%%%%%%%%
+
+
+\include{appendix}
+
+\backmatter
+
+\printbibliography
+
+\include{medium}
+
+
+\end{document}

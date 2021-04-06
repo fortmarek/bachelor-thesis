@@ -1,0 +1,80 @@
+%---------------------------------------------------------------
+\chapter{Introduction}
+%---------------------------------------------------------------
+\setcounter{page}{1}
+
+\section{Motivation, Focus of Thesis}
+
+Theory of finite automata is an important part of computer science curriculum at FIT CTU in Prague and other universities around the world. And although there is a lot of resources one can learn from, there is a lack of those that utilize modern tools. One of such modern tools is iPad (and touch devices in general). This thesis will fill in this gap and build a finite automata editor native application for iPad in this thesis.
+
+Furthermore, I will expand on the recent work done at FIT CTU in Prague concerning development of algorithms library and, more importantly for this thesis, finite automata algorithms including simulating input. This library is named \href{https://alt.fit.cvut.cz/}{Algorithms Library Toolkit} (ALT) \cite{alt} and it has been open sourced.
+
+The main motivation of this thesis is to improve how students learn finite automata and more specifically, enhance the current course BI-AAG that is taught at FIT CTU in Prague. It is also an opportunity to try out algorithms library in practice and create a concrete example of how it can be leveraged.
+
+\section{Thesis Goals}
+
+The main goal of this thesis is to implement a prototype of an automata editor for iPad. This application should enable users to create and edit finite automata with emphasis on touch-based input.
+I will also study the web interface of ALT \cite{web-alt}, ALT itself focusing on design and drawing of finite automata, the possibilities of strokes detection on touch devices, and the approaches of shape detection, especially those used in automata drawing on iOS platform.
+
+After the initial study of current approaches, I will implement a prototype of a finite automata editor iPad app that will be capable of finite automata recognition from strokes.
+
+I will then conduct usability testing to assess the usability and shortcomings of the prototype.
+
+\section{Thesis Structure}
+
+Let me now introduce you to the structure of the rest of the thesis:
+
+\begin{itemize}
+\item In \textbf{Chapter 2} I will go over the theoretical concepts to properly explain terms and concepts on which it will be built upon later.
+
+\item \textbf{Chapter 3} is concerned with analysis of already existing solutions of creating automata editor, the existing ALT web interface and ALT itself.
+
+\item \textbf{Chapter 4} is about the design of the editor itself.
+
+\item In \textbf{Chapter 5} I will write about the implementation.
+
+\item \textbf{Chapter 6} will go into the specifics of user testing and its outcomes.
+
+\item \textbf{Conclusion} is the last chapter of this thesis.
+
+\end{itemize}
+
+\chapter{Theory}
+\label{chap:theory}
+
+Firstly,  I will need to define terms and formal definitions concerning mainly finite automata theory, as that is the main subject of this thesis, and machine learning (maybe!!)
+
+\section{Automata Theory}
+ 
+The following definitions are taken from Automata and Grammars by Eliška Šestáková \cite{automata-and-grammars}.
+
+\begin{definition}
+Alphabet (denoted by $\Sigma$) is a finite set whose elements are called symbols.
+\end{definition}
+
+\chapter{Analysis}
+\label{chap:analysis}
+
+\chapter{Automata Editor Design}
+\label{chap:design}
+
+\chapter{Implementation}
+\label{chap:implementation}
+
+\chapter{User Testing}
+
+\chapter{Conclusion}
+
+\section{Goals Assessment}
+
+Assess my goals.
+
+\section{Thesis Contribution}
+
+The contribution of this thesis is testing Algorithms Library Toolkit in practice and can now be pointed to for users who want to see its capabilities. The editor can now also be recommended in the course of BI-AAG at FIT CTU (and other universities) - for students and teachers alike.
+
+\section{Future Work}
+
+Algorithms Library Toolkit is an extensive library and there are still capabilites that are not implemented in the editor.
+
+The choice of developing a native iOS application has resulted in good UX, but in the future it would be beneficial to broaden the possible audience and either develop a similar Android app or create a more ubiquituous web interface.
