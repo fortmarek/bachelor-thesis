@@ -13,8 +13,6 @@
 \documentclass[thesis=B,english]{FITthesis}[2019/12/23]
 
 \usepackage[utf8]{inputenc} % LaTeX source encoded as UTF-8
-% \usepackage[latin2]{inputenc} % LaTeX source encoded as ISO-8859-2
-% \usepackage[cp1250]{inputenc} % LaTeX source encoded as Windows-1250
 
 % \usepackage{subfig} %subfigures
 % \usepackage{amsmath} %advanced maths
@@ -22,14 +20,12 @@
 
 \usepackage{dirtree} %directory tree visualisation
 
+\usepackage{hyperref} %hypertext links
+
 % % list of acronyms
 % \usepackage[acronym,nonumberlist,toc,numberedsection=autolabel]{glossaries}
 % \iflanguage{czech}{\renewcommand*{\acronymname}{Seznam pou{\v z}it{\' y}ch zkratek}}{}
 % \makeglossaries
-
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
-% EDIT THIS
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
 
 \department{Department of \ldots (SPECIFY)}
 \title{Finite Automata iPad Editor}
@@ -43,7 +39,7 @@
 \abstractCS{V n{\v e}kolika v{\v e}t{\' a}ch shr{\v n}te obsah a p{\v r}{\' i}nos t{\' e}to pr{\' a}ce v {\v c}esk{\' e}m jazyce.}
 \placeForDeclarationOfAuthenticity{Prague}
 \keywordsCS{Replace with comma-separated list of keywords in Czech.}
-\keywordsEN{Replace with comma-separated list of keywords in English.}
+\keywordsEN{iPad application,  finite automata,  interactive editor,  AlgorithmsLibrary Toolkit, Composable Architecture, Swift}
 \declarationOfAuthenticityOption{1} %select as appropriate, according to the desired license (integer 1-6)
 % \website{http://site.example/thesis} %optional thesis URL
 
@@ -59,19 +55,16 @@
 
 \section{Motivation, Focus of Thesis}
 
-Finite automata have been first described by Warren McCulloch and Walter Pitts in 1943 and since then they have become one of the cornerstones of computer science. While finite automata research is limited nowadays, it is still something that we build upon today and every student of computer science needs to understand its concepts.
+Theory of finite automata is an important part of computer science curriculum at FIT CTU in Prague and other universities around the world. And although there is a lot of resources one can learn from, there is a lack of those that utilize modern tools. One of such modern tools is iPad (and touch devices in general). This thesis will fill in this gap and build a finite automata editor native application for iPad in this thesis.
 
-And although there is a lot of resources one can learn from, there is a lack of those that utilize modern tools. One of such modern tools is iPad (and touch devices in general). I'd like to fill in this gap and build a finite automata editor native application for iPad in this thesis.
+Furthermore, I will expand on the recent work done at FIT CTU in Prague concerning development of algorithms library and, more importantly for this thesis, finite automata algorithms including simulating input. This library is named \href{https://alt.fit.cvut.cz/}{Algorithms Library Toolkit} (ALT) \cite{alt} and it has been open sourced.
 
-Furthermore, I'd like to expand on the recent work done at FIT CTU concerning development of algorithms library and, more importantly for this thesis, finite automata algorithms including simulating input. This library is named Algorithms Library Toolkit and it has been open sourced.
-
-Last but not least, in this thesis I will try out the new iOS programming declarative paradigm which has been introduced by Apple with the new SwiftUI framework with the combination of a functional architecture, called Composable Architecture.
-
-The main motivation of this thesis is to improve how students learn finite automata and more specifically, enhance the current course BI-AAG that is taught at FIT CTU. It's also an opportunity to try out algorithms library in practice and create a concrete example of how it can be leveraged.
+The main motivation of this thesis is to improve how students learn finite automata and more specifically, enhance the current course BI-AAG that is taught at FIT CTU in Prague. It is also an opportunity to try out algorithms library in practice and create a concrete example of how it can be leveraged.
 
 \section{Thesis Goals}
 
-Goals of this thesis are the folowing:
+The main goal of this thesis is to implement a prototype of an automata editor for iPad. This application should enable users to create and edit finite automata with emphasis on touch-based input.
+I will also study the web interface of the algorithms library \cite{web-alt}.
 
 \begin{itemize}
 	\item prepare and explore how to create interface for automata library
@@ -154,9 +147,6 @@ The choice of developing a native iOS application has resulted in good UX, but i
 
 \setsecnumdepth{part}
 
-\bibliographystyle{iso690}
-\bibliography{mybibliographyfile}
-
 \setsecnumdepth{all}
 \appendix
 
@@ -185,4 +175,6 @@ The choice of developing a native iOS application has resulted in good UX, but i
 	}
 \end{figure}
 
+\bibliography{BP_Fort_Marek_2021}
+\bibliographystyle{ieeetr}
 \end{document}
