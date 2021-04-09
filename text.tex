@@ -44,9 +44,11 @@ Let me now introduce you to the structure of the rest of the thesis:
 
 Firstly,  I will need to define terms and formal definitions concerning mainly finite automata theory, as that is the main subject of this thesis, and machine learning (maybe!!)
 
-\section{Automata Theory}
+\section{Formal Languages and Grammars}
  
 The following definitions are taken from Automata and Grammars by Eliška Šestáková \cite{automata-and-grammars}, Introduction to Automata Theory, Languages, and Computation \cite{introduction-automata}, and materials from BIE-AAG course \cite{lectures}.
+
+\subsection{Formal Languages}
 
 \begin{definition}
 Alphabet (conventionally denoted by $\Sigma$) is a finite set whose elements are called symbols.
@@ -76,7 +78,82 @@ For a binary alphabet $\Sigma$ = \{0, 1\} a formal language over $\Sigma$ are th
     \item enumeration notation where all possible strings in the language are listed, e.g.: $\textit{L}_1 = \{\epsilon\}, \textit{L}_2 = \{1\}, \textit{L}_3 = \{0, 00, 000, 01\}$ 
     \item set-builder notation where the languages are described in the following way: \{ w $\mid$ something about w \}. Examples are: $\textit{L}_4 = \{\textit{w} \mid \textit{w} \in {0,1}^* \wedge \left|\textit{w}\right| mod 2 = 0\}$, $\textit{L}_5 = \{0^\textit{n}1^\textit{n} : \textit{n} \in \mathbb{N}_0\}$
 \end{itemize}
-Set-builder 
+
+\subsection{Grammar}
+
+Grammars are used to describe languages. Below you can find how they are defined:
+
+\begin{definition}
+    \textit{Grammar} is a quadruple of G = (N, $\Sigma$, P, S) where:
+\end{definition}
+\begin{itemize}
+    \item \textit{N} is a finite non-empty set of nonterminal symbols
+    \item $\Sigma$ is a finite set of terminal symbols ($\Sigma$ $\cap$ \textit{N} = $\emptyset$). Note that \textit{N} $\cap$ $\Sigma$ = $\emptyset$
+    \item \textit{P} is a finite set of \textit{production rules}, assuming the following form:\\
+
+    \centerline{$\alpha\textit{A}\beta \rightarrow \gamma$ ($\alpha, \beta, \gamma \in (\textit{N} \cup \Sigma)^*$)}
+\end{itemize}
+
+The following is an example of a grammar that describes the language \textit{L} = $\{01^\textit{n}0 : \textit{n} \in \mathbb{N}_0\}$:
+Grammar \textit{G} = (\{\textit{A}, \textit{S}\}, \{0, 1\}, \textit{P}, \textit{S}) where \textit{P}:
+\begin{itemize}
+    \item \textit{S} $\rightarrow$ 0\textit{A}
+    \item \textit{A} $\rightarrow$ 1\textit{A}
+    \item \textit{A} $\rightarrow$ 0
+\end{itemize}
+
+\subsection{Chomsky Classification of Grammars}
+
+Grammars are divided into four classes where they differ in their production rules. 
+
+\begin{definition}
+    Let G = (N, $\Sigma$, P, S). We say that G is:
+\end{definition}
+\begin{enumerate}
+    \item \textit{Unrestricted grammar} (type 0), if every rule is in the form of:
+    
+    \centerline{$\alpha\textit{A}\beta \rightarrow \gamma$ ($\alpha, \beta, \gamma \in (\textit{N} \cup \Sigma)^*$, $\textit{A} \in \textit{N}$)}
+    \item \textit{Context-sensitive} (type 1), if every rule is in the form of:
+
+    \centerline{$\gamma\textit{A}\delta \rightarrow \gamma\alpha\delta$ ($\gamma, \delta \in (\textit{N} \cup \Sigma)^*$, $\textit{a} \in (\textit{N} \cup \Sigma)^+$)}
+    or in the form of $\textit{S} \rightarrow \epsilon$ if \textit{S} is not present on the right hand side of any rule of a given grammar.
+    \item \textit{Context-free grammar} (type 2) if every rule is in the form of:
+
+    \centerline{$\textit{A} \rightarrow \alpha$ $(\textit{A} \in \textit{N}, \alpha \in (N \cup \Sigma)^*)$}
+    \item \textit{Regular grammar} (type 3), if every rule is in the form of:
+
+    \centerline{$\textit{A} \rightarrow \textit{a}$ or $\textit{A} \rightarrow \textit{aB}$ $(\textit{a} \in \Sigma, \textit{A}, \textit{B} \in \textit{N})$}
+    or in the form of $\textit{S} \rightarrow \epsilon$ if \textit{S} is not present on the right hand side of any rule of a given grammar.
+\end{enumerate}
+
+\subsection{Classification of Languages}
+Classification of languages, also known as the Chomsky hierarchy, has the following definition:
+\begin{definition}
+    We say that language is:
+\end{definition}
+\begin{enumerate}
+    \item \textit{formal} if it is a formal language but is neither regular, context-free, context-sensitive, nor recursive enumerable. These languages are not recognized by Turing machine.
+    \item \textit{recursively enumerable} if and only if $\exists$ unrestricted grammar which generates it
+    \begin{itemize}
+        \item recognized by Turing machine
+    \end{itemize}
+    \item \textit{context-sensitive} if and only if $\exists$ context-sensitive grammar which generates it
+    \begin{itemize}
+        \item recognized by linear bounded Turing machine
+    \end{itemize}
+    \item \textit{context-free} if and only if $\exists$ context-free grammar which generates it
+    \begin{itemize}
+        \item recognized by a nondeterministic pushdown automaton
+    \end{itemize}
+    \item \textit{regular} if and only if $\exists$ regular grammar that generates it
+    \begin{itemize}
+        \item recognized by finite automaton
+    \end{itemize}
+\end{enumerate}
+
+In this thesis we will be mainly interested in regular languages / grammars since those are recognized by finite automata. Finite automata will be defined in the following section.
+
+\section{Finite Automata}
 
 \chapter{Analysis}
 \label{chap:analysis}
