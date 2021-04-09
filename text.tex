@@ -46,11 +46,37 @@ Firstly,  I will need to define terms and formal definitions concerning mainly f
 
 \section{Automata Theory}
  
-The following definitions are taken from Automata and Grammars by Eliška Šestáková \cite{automata-and-grammars}.
+The following definitions are taken from Automata and Grammars by Eliška Šestáková \cite{automata-and-grammars}, Introduction to Automata Theory, Languages, and Computation \cite{introduction-automata}, and materials from BIE-AAG course \cite{lectures}.
 
 \begin{definition}
-Alphabet (denoted by $\Sigma$) is a finite set whose elements are called symbols.
+Alphabet (conventionally denoted by $\Sigma$) is a finite set whose elements are called symbols.
 \end{definition}
+Alphabets therefore can be:
+\begin{itemize}
+    \item $\Sigma$ = \{0, 1\}
+    \item $\Sigma$ = \{a, b, c, d, e\}
+    \item $\Sigma$ = \{one, two\}
+\end{itemize}
+
+\begin{definition}
+String (word) over an alphabet is a finite sequence of symbols from that alphabet.
+\end{definition}
+\begin{itemize}
+    \item $\epsilon$ - \textit{empty string} (string with zero occurences of symbols)
+    \item $\Sigma^{*}$ - set of all strings over $\Sigma$
+    \item $\Sigma^{+}$ - set of all nonempty strings over $\Sigma$
+\end{itemize}
+For a binary alphabet $\Sigma$ = \{0, 1\} $\epsilon$, 1001, 100, 1, 001 are all strings over the alphabet $\Sigma$.
+
+\begin{definition}
+Formal language L over an alphabet $\Sigma$ is any subset of all the strings over $\Sigma$ - i.e., $L \subseteq \Sigma$
+\end{definition}
+For a binary alphabet $\Sigma$ = \{0, 1\} a formal language over $\Sigma$ are then subsets of \textit{all} binary strings. We can denote the language either by:
+\begin{itemize}
+    \item enumeration notation where all possible strings in the language are listed, e.g.: $\textit{L}_1 = \{\epsilon\}, \textit{L}_2 = \{1\}, \textit{L}_3 = \{0, 00, 000, 01\}$ 
+    \item set-builder notation where the languages are described in the following way: \{ w $\mid$ something about w \}. Examples are: $\textit{L}_4 = \{\textit{w} \mid \textit{w} \in {0,1}^* \wedge \left|\textit{w}\right| mod 2 = 0\}$, $\textit{L}_5 = \{0^\textit{n}1^\textit{n} : \textit{n} \in \mathbb{N}_0\}$
+\end{itemize}
+Set-builder 
 
 \chapter{Analysis}
 \label{chap:analysis}
