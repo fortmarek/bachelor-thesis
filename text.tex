@@ -181,6 +181,50 @@ Expanding upon the difference between the definition of the transition function:
 \end{itemize}
 If we change the definition of NFA's $\delta$ to a mapping from \textit{Q} $\times$ ($\Sigma \cup \{\epsilon\}$) we allow, what are called, $\epsilon$-transitions that allow us to move to a different state while not reading any input from the tape. This finite automaton is then called \textit{nondeterministic finite automaton with $\epsilon-transitions$}.
 
+\subsection{Representation of Finite Automata}
+
+Finite automata's transition functions $\delta$ are generally represented in the form of:
+\begin{itemize}
+    \item \textit{Formal notation}\\
+    (NFA) $\delta$(\textit{S}, 0) = \{\textit{S}, \textit{A}\} (transition from the state \textit{S} and symbol 0 to the states \textit{S} and \textit{A})\\
+    (DFA) $\delta$(\textit{A}, 0) = \textit{B} (transition from the state \textit{A} and symbol 0 to a single state, not a set of states, \textit{B})
+    \item \textit{Weighted directed graph} (state diagram)\\
+    Automata can be represented graphically as directed weighted graphs. Each state is represented as a vertice in the graph and final states are recognized by being a double circle, instead of a single one. Initial state is the one with incoming edge. The transitions are then directed edges between states. You can see FA represented as weighted directed graph in \ref{graph-representation}
+    \item \textit{Table}\\
+    Table representation has in the first column all states where initial state is marked with $\rightarrow$ while final states is marked with $\leftarrow$. In the first row, excluding the first column, there are symbols of the alphabet, $\Sigma$. In the rest of the rows are states (or set of states) that will be transitioned to on a given input (in the first row). You can see an example of it in \ref{table-representation}.
+\end{itemize}
+\begin{figure}
+\begin{tikzpicture}
+    \node[state, initial] (q1) {$q_1$};
+    \node[state, accepting, right of=q1] (q2) {$q_2$};
+    \node[state, right of=q2] (q3) {$q_3$};
+    \draw   (q1) edge[loop above] node{0} (q1)
+            (q1) edge[above] node{1} (q2)
+            (q2) edge[loop above] node{1} (q2)
+            (q2) edge[bend left, above] node{0} (q3)
+            (q3) edge[bend left, below] node{0, 1} (q2);
+\end{tikzpicture}
+\caption{FA graph representation}\label{graph-representation}
+\end{figure}
+\begin{figure}
+\begin{tabular}{||c|c|c||} 
+    \hline
+    $\delta_{NFA}$ & 0 & 1 \\ [0.5ex] 
+    \hline\hline
+    $\rightarrow \textit{S}$ & S & \textit{S}, \textit{A} \\ 
+    \hline
+    \textit{A} & \textit{B} & \\
+    \hline
+    $\leftarrow \textit{B}$ &  & \\
+    \hline
+\end{tabular}
+\caption{FA table representation}\label{table-representation}
+\end{figure}
+In this thesis we will mostly be working with the representation in form of weighted directed graph as that is what will the user edit in the app.
+This also concludes theory about finite automata and formal languages.
+
+\section{Machine Learning}
+
 \chapter{Analysis}
 \label{chap:analysis}
 
