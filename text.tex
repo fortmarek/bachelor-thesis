@@ -42,7 +42,7 @@ Let me now introduce you to the structure of the rest of the thesis:
 \chapter{Theory}
 \label{chap:theory}
 
-Firstly,  I will need to define terms and formal definitions concerning mainly finite automata theory, as that is the main subject of this thesis, and machine learning (maybe!!)
+Firstly,  I will need to define terms and formal definitions concerning mainly finite automata theory, as that is the main subject of this thesis, and then machine learning as some of its concepts were important during the implementation. 
 
 \section{Formal Languages and Grammars}
  
@@ -224,6 +224,25 @@ In this thesis we will mostly be working with the representation in form of weig
 This also concludes theory about finite automata and formal languages.
 
 \section{Machine Learning}
+
+Machine learning does not have an exact definition but e.g. in a book Foundations of Machine Learning it's loosely defined as "computational methods using experience to improve performance or to make accurate predictions" \cite{ml-foundations}. \textit{Experience} means something we know from the past that we can leverage for making predictions in the future. Usually, this experience comes in the form of data. The book Foundations of Machine Learning \cite{ml-foundations} and materials from BIE-VZD from FIT CTU in Prague \cite{vzd-lectures} will be used further in this section to define terms and concepts necessary for this thesis.
+
+\subsection{Classification}
+
+Machine learning, in order to cluster problems that can be solved in a similar way, have defined a few learning scenarios, most notably supervised and unsupervised learning. Learning scenario is a basic description of what type of data we have, how we receive the data and the test data that we use to evaluate the learning algorithm.
+
+\begin{itemize}
+    \item \textit{supervised learning}: Our goal is to explain \textit{variable Y} given \textit{independent variables} $\textit{X}_0$, $\textit{X}_1$, ..., $\textit{X}_{\textit{p} - 1}$. We do this by finding a "function" for which most of its examples the following holds:\\
+    \centerline{\textit{Y} $\approx$ \textit{f}($\textit{X}_0$, $\textit{X}_1$, ..., $\textit{X}_{\textit{p} - 1}$)}
+    \item \textit{unsupervised learning}: Our goal is to find structures of "similar" data. We do not predict any class and there is no clear way to assess the quality of an unsupervised learning algorithm since it is not clearly defined what the end result should be.
+\end{itemize}
+
+In this thesis we will be only interested in the supervised learning. We can also divide common problems that machine learning is trying to solve by learning tasks - that includes classification, regression, ranking, clustering, etc. Let's look more closely at classification which will be later used in the implementation.
+
+\begin{itemize}
+    \item Classification is a problem of assigning a category to each item.
+\end{itemize}
+It is also a problem solved via supervised learning. To expand on the definition of supervised learning from above, classification is a special case where \textit{Y} has only a few (countable amount) of values. The simplest example of classification is \textit{binary classification}. E.g. we want to predict whether a patient has flu and our data - gender of a patient, person can leave the bed - can be represented in a binary format (yes/no).
 
 \chapter{Analysis}
 \label{chap:analysis}
