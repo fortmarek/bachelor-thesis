@@ -155,6 +155,32 @@ In this thesis we will be mainly interested in regular languages / grammars sinc
 
 \section{Finite Automata}
 
+The final editor app will be for finite automata, therefore they are very important for this thesis. Informally, a finite automaton is a model for simple computation. States, that serve as memory, and transitions together form a \textit{control unit}. Along with a control unit, the finite automaton has a \textit{read-only input tape}, which is divided into individual cells, and the \textit{head} that scans the input tape as the automaton continuously reads it, cell by cell. Automaton starts in its initial state and with head pointing at the first cell. As the input is read, the head moves until it has read all of the input tape. If there is a missing transition for an input, the automaton does not accept the input. Otherwise, it accepts the input if it is in an end state at the end of the input.
+
+Let's define a finite automaton formally:
+\begin{definition}
+    Finite automaton is a quintuple \textit{M} = (\textit{Q}, $\Sigma$, $\delta$, $\textit{q}_0$, \textit{F}) where:
+    \begin{itemize}
+        \item \textit{Q} is a finite non-empty set of states
+        \item $\Sigma$ is a finite input alphabet
+        \item $\delta$ is the transition function (the exact definition is determined by which type of finite automaton it is - see below)
+        \item $\textit{q}_0 \in \textit{Q}$ is the initial state
+        \item $\textit{F} \subseteq \textit{Q}$ is the set of initial states
+    \end{itemize}
+\end{definition}
+
+Finite automaton can also be either \textit{deterministic} finite automaton or \textit{nondeterministic} finite automaton. This dictates the exact definition of $\delta$ - transition function.
+For deterministic finite automaton (DFA) the definition of $\delta$ is:\\
+\centerline{$\delta$ is a mapping from \textit{Q} $\times$ $\Sigma$ to \textit{Q}}
+$\delta$ for nondeterministic finite automaton (NFA) is defined as:\\
+\centerline{$\delta$ is a mappping from \textit{Q} $\times$ $\Sigma$ into the set of all subsets \textit{Q} (denoted by $2^\textit{Q}$)}
+Expanding upon the difference between the definition of the transition function:
+\begin{itemize}
+    \item DFA can only transition from one state to another, e.g. from $\textit{q}_0$ to $\textit{q}_1$ ($\textit{q}_0$, $\textit{q}_1$ $\in$ \textit{Q})
+    \item NFA can transition to a set of states, e.g. from $\textit{q}_0$ to $\textit{q}_1$ ($\textit{q}_0$, $\textit{q}_1$, $\textit{q}_2$ $\in$ \textit{Q})
+\end{itemize}
+If we change the definition of NFA's $\delta$ to a mapping from \textit{Q} $\times$ ($\Sigma \cup \{\epsilon\}$) we allow, what are called, $\epsilon$-transitions that allow us to move to a different state while not reading any input from the tape. This finite automaton is then called \textit{nondeterministic finite automaton with $\epsilon-transitions$}.
+
 \chapter{Analysis}
 \label{chap:analysis}
 
