@@ -5,7 +5,7 @@
 
 \section{Motivation, Focus of Thesis}
 
-Theory of finite automata is an important part of computer science curriculum at FIT CTU in Prague and other universities around the world. And although there is a lot of resources one can learn from, there is a lack of those that utilize modern tools. One of such modern tools is iPad (and touch devices in general). This thesis will fill in this gap and build a finite automata editor native application for iPad in this thesis.
+Theory of finite automata is an important part of computer science curriculum at FIT CTU in Prague and other universities around the world. And although there is a lot of resources one can learn from, there is a lack of those that utilize modern tools. One of such modern tools is iPad (and touch devices in general). This thesis will fill in this gap as the result will be a finite automata editor application for iPad.
 
 Furthermore, I will expand on the recent work done at FIT CTU in Prague concerning development of algorithms library and, more importantly for this thesis, finite automata algorithms including simulating input. This library is named \href{https://alt.fit.cvut.cz/}{Algorithms Library Toolkit} (ALT) \cite{alt} and it has been open sourced.
 
@@ -16,7 +16,7 @@ The main motivation of this thesis is to improve how students learn finite autom
 The main goal of this thesis is to implement a prototype of an automata editor for iPad. This application should enable users to create and edit finite automata with emphasis on touch-based input.
 I will also study the web interface of ALT \cite{state-maker} \cite{web-alt}, ALT itself focusing on design and drawing of finite automata, the possibilities of strokes detection on touch devices, and the approaches of shape detection, especially those used in automata drawing on iOS platform.
 
-After the initial study of current approaches, I will implement a prototype of a finite automata editor iPad app that will be capable of finite automata recognition from strokes.
+After the initial study of current approaches and theory, I will implement a prototype of a finite automata editor iPad app that will be capable of recognizing finite automaton elements from strokes and simulating input.
 
 I will then conduct usability testing to assess the usability and shortcomings of the prototype.
 
@@ -27,7 +27,7 @@ Let me now introduce you to the structure of the rest of the thesis:
 \begin{itemize}
 \item In \textbf{Chapter 2} I will go over the theoretical concepts to properly explain terms and concepts on which it will be built upon later.
 
-\item \textbf{Chapter 3} is concerned with analysis of already existing solutions of creating automata editor, the existing ALT web interface and ALT itself.
+\item \textbf{Chapter 3} is concerned with the analysis of already existing solutions of creating automata editor, the existing ALT web interface and ALT itself.
 
 \item \textbf{Chapter 4} is about the design of the editor itself.
 
@@ -35,7 +35,7 @@ Let me now introduce you to the structure of the rest of the thesis:
 
 \item \textbf{Chapter 6} will go into the specifics of user testing and its outcomes.
 
-\item \textbf{Conclusion} is the last chapter of this thesis.
+\item \textbf{Conclusion} is the last chapter of this thesis where I will assess the success of fulfilling aforementioned goals and lay out possible future development.
 
 \end{itemize}
 
@@ -73,10 +73,10 @@ For a binary alphabet $\Sigma$ = \{0, 1\} $\epsilon$, 1001, 100, 1, 001 are all 
 \begin{definition}
 Formal language L over an alphabet $\Sigma$ is any subset of all the strings over $\Sigma$ - i.e., $L \subseteq \Sigma$
 \end{definition}
-For a binary alphabet $\Sigma$ = \{0, 1\} a formal language over $\Sigma$ are then subsets of \textit{all} binary strings. We can denote the language either by:
+For a binary alphabet $\Sigma$ = \{0, 1\} a formal language over $\Sigma$ is then subsets of \textit{all} binary strings. We can denote the language either by:
 \begin{itemize}
-    \item enumeration notation where all possible strings in the language are listed, e.g.: $\textit{L}_1 = \{\epsilon\}, \textit{L}_2 = \{1\}, \textit{L}_3 = \{0, 00, 000, 01\}$ 
-    \item set-builder notation where the languages are described in the following way: \{ w $\mid$ something about w \}. Examples are: $\textit{L}_4 = \{\textit{w} \mid \textit{w} \in {0,1}^* \wedge \left|\textit{w}\right| mod 2 = 0\}$, $\textit{L}_5 = \{0^\textit{n}1^\textit{n} : \textit{n} \in \mathbb{N}_0\}$
+    \item enumeration notation where all possible strings in the language are listed, e.g.: $\textit{L}_1 = \{\epsilon\}, \textit{L}_2 = \{1\}, \textit{L}_3 = \{0, 00, 000, 01\}$.
+    \item set-builder notation where the languages are described in the following way: \{ w $\mid$ something about w \}. Examples are: $\textit{L}_4 = \{\textit{w} \mid \textit{w} \in {0,1}^* \wedge \left|\textit{w}\right| mod 2 = 0\}$, $\textit{L}_5 = \{0^\textit{n}1^\textit{n} : \textit{n} \in \mathbb{N}_0\}$.
 \end{itemize}
 
 \subsection{Grammar}
@@ -87,8 +87,8 @@ Grammars are used to describe languages. Below you can find how they are defined
     \textit{Grammar} is a quadruple of G = (N, $\Sigma$, P, S) where:
 \end{definition}
 \begin{itemize}
-    \item \textit{N} is a finite non-empty set of nonterminal symbols
-    \item $\Sigma$ is a finite set of terminal symbols ($\Sigma$ $\cap$ \textit{N} = $\emptyset$). Note that \textit{N} $\cap$ $\Sigma$ = $\emptyset$
+    \item \textit{N} is a finite non-empty set of nonterminal symbols.
+    \item $\Sigma$ is a finite set of terminal symbols ($\Sigma$ $\cap$ \textit{N} = $\emptyset$). Note that \textit{N} $\cap$ $\Sigma$ = $\emptyset$.
     \item \textit{P} is a finite set of \textit{production rules}, assuming the following form:\\
 
     \centerline{$\alpha\textit{A}\beta \rightarrow \gamma$ ($\alpha, \beta, \gamma \in (\textit{N} \cup \Sigma)^*$)}
@@ -189,9 +189,9 @@ Finite automata's transition functions $\delta$ are generally represented in the
     (NFA) $\delta$(\textit{S}, 0) = \{\textit{S}, \textit{A}\} (transition from the state \textit{S} and symbol 0 to the states \textit{S} and \textit{A})\\
     (DFA) $\delta$(\textit{A}, 0) = \textit{B} (transition from the state \textit{A} and symbol 0 to a single state, not a set of states, \textit{B})
     \item \textit{Weighted directed graph} (state diagram)\\
-    Automata can be represented graphically as directed weighted graphs. Each state is represented as a vertice in the graph and final states are recognized by being a double circle, instead of a single one. Initial state is the one with incoming edge. The transitions are then directed edges between states. You can see FA represented as weighted directed graph in \ref{graph-representation}
+    Automata can be represented graphically as directed weighted graphs. Each state is represented as a vertice in the graph and final states are recognized by being a double circle, instead of a single one. Initial state is the one with an incoming edge. The transitions are then directed edges between states. You can see FA represented as weighted directed graph in \ref{graph-representation}
     \item \textit{Table}\\
-    Table representation has in the first column all states where initial state is marked with $\rightarrow$ while final states is marked with $\leftarrow$. In the first row, excluding the first column, there are symbols of the alphabet, $\Sigma$. In the rest of the rows are states (or set of states) that will be transitioned to on a given input (in the first row). You can see an example of it in \ref{table-representation}.
+    Table representation has in the first column all states where initial state is marked with $\rightarrow$ while final states is marked with $\leftarrow$. In the first row, excluding the first column, there are symbols of the alphabet, $\Sigma$. In the rest of the rows are states (or a set of states) that will be transitioned to on a given input (defined in the first row). You can see an example of it in \ref{table-representation}.
 \end{itemize}
 \begin{figure}
 \begin{tikzpicture}
@@ -254,7 +254,7 @@ In the analysis I will study the following:
     \item possibilites of detection of strokes on touch devices.
 \end{itemize}
 
-\section{Existing Applications, ALT Web Interface}
+\section{Existing Applications}
 
 This section will be concerned with the study of existing applications - be it applications for mobile or web.
 
@@ -298,6 +298,14 @@ There are also apps available as desktop applications. One is a Finite Automaton
     \includegraphics[width=\textwidth]{turingsim}
     \caption{TuringSim interface screenshot}\label{turingsim-screen}
 \end{figure}
+
+\section{ALT Analysis}
+
+Now I will go over ALT and its features that can be leveraged for simulating FA input. The code of ALT is available on GitLab \cite{gitlab} where there are multiple repositories in group Algorithms Library Toolkit (webui-client, infrastructe, etc.) - that includes repository Algorithms Library Toolkit Core \cite{alt-code}. There we can find algorithms that can later be used for FA editor. The code is divided into multiple modules that are then built and linked together using CMake \cite{cmake}. The most important module for this thesis are \textit{alib2data} and \textit{alib2algo} where alib2data contains FA models and alib2algo algorithms for simulating input.
+
+\section{FA Model}
+
+ALT offers  
 
 \chapter{Automata Editor Design}
 \label{chap:design}
