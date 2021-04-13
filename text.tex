@@ -14,7 +14,7 @@ The main motivation of this thesis is to improve how students learn finite autom
 \section{Thesis Goals}
 
 The main goal of this thesis is to implement a prototype of an automata editor for iPad. This application should enable users to create and edit finite automata with emphasis on touch-based input.
-I will also study the web interface of ALT \cite{web-alt}, ALT itself focusing on design and drawing of finite automata, the possibilities of strokes detection on touch devices, and the approaches of shape detection, especially those used in automata drawing on iOS platform.
+I will also study the web interface of ALT \cite{state-maker} \cite{web-alt}, ALT itself focusing on design and drawing of finite automata, the possibilities of strokes detection on touch devices, and the approaches of shape detection, especially those used in automata drawing on iOS platform.
 
 After the initial study of current approaches, I will implement a prototype of a finite automata editor iPad app that will be capable of finite automata recognition from strokes.
 
@@ -246,6 +246,58 @@ It is also a problem solved via supervised learning. To expand on the definition
 
 \chapter{Analysis}
 \label{chap:analysis}
+
+In the analysis I will study the following:
+\begin{itemize}
+    \item existing applications that enable users edit finite automata
+    \item ALT itself, focusing on design and drawing of finite automata
+    \item possibilites of detection of strokes on touch devices.
+\end{itemize}
+
+\section{Existing Applications, ALT Web Interface}
+
+This section will be concerned with the study of existing applications - be it applications for mobile or web.
+
+\subsection{ALT Web Interface}
+
+ALT web interface has been built as a part of bachelor's thesis made by Michael Vrána \cite{web-alt} leveraging work already done in ALT itself. ALT web interface uses Pipe-and-Filter \cite{pipe-and-filter} architecture to easily combine input and ouputs of the individual algorithms that ALT offers which can be seen in figure \ref{alt-web-interface-screen}. Apart from ALT algorithms it also includes finite automata editor done by Petr Svoboda \cite{state-maker}.
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{alt-web-interface}
+    \caption{ALT web interface screenshot}\label{alt-web-interface-screen}
+\end{figure}
+
+This finite automata editor is called Statemaker and you can see a screenshot of how it looks in figure \ref{statemaker-screen}. To summarize its capabilities - users can:
+\begin{itemize}
+    \item add states, as well as initial and final states
+    \item add transitions between states
+    \item edit transition string
+    \item mark state as initial or final
+    \item remove states and transitions
+    \item import and export automaton in supported formats
+    \item automatic positioning of transitions and states
+\end{itemize}
+All of the above features work reliably and are done in intuitive manner - user can quickly understand how to work with all the components. The most notable missing feature is easy simulation of input - this can be done via ALT web interface but if someone is looking for only editing FAs and simulating whether input string is accepted, they have to transition between two interfaces. The benefit is that they can then tap into all the other funcionality that ALT offers. The author of Statemaker has chosen React and Typescript as underlying technologies \cite{state-maker}.
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{statemaker}
+    \caption{Statemaker screenshot}\label{statemaker-screen}
+\end{figure}
+
+\subsection{Existing Applications}
+
+As the main goal of this thesis is to write a finite automata editor for iPad, in this part I will study existing applications mainly for touch devices. 
+
+One of such applications is TuringSim \cite{turingsim}. Although, it is not for FAs but for a Turing machine, it also consists of an editor where user can add and edit states and transitions, thus making it similar to a FA editor. You can see its interface in figure \ref{turingsim-screen}. This editors lets users add and edit automaton's states and transitions. Users can also simulate input on the Turing machine's read-and-write tape. Editing of the automaton is done only via tap gestures which is similar to Statemaker with the difference that there are no distinct buttons for those actions. Therefore, it does not fully utilize the potential of touch devices as the UX is very similar to what would one experience on the web. Unfortunately, the app on iPad is broken at the moment as it is missing bottom toolbar for simulating input.
+
+There is also app called Finite Automata \cite{finite-automata-app}. In this app user can not edit automata in their weighted graph representation but instead has to use a command line that takes individual command which are described in the app. This app does not utilize touch device features at all.
+
+There are also apps available as desktop applications. One is a Finite Automaton Editor by Jaime Rangel-Mondragon that is available as interactive Wolfram notebook \cite{wolfram-editor}. This app allows you to edit the automaton via a transition table and does not allow to simulate any input. There is also Automata Editor by Max Shawabkeh \cite{automata-editor-max}. In this desktop applications users can create and edit their automaton either via a table representation or regular expression. There are also features such as NFA determinization, evaluating automata on strings, and minimizing DFA. Thus it has a powerful feature set but one has to be already familiar with FA theory. It should also be noted that the feature set is a subset of what ALT web interface offers.
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{turingsim}
+    \caption{TuringSim interface screenshot}\label{turingsim-screen}
+\end{figure}
 
 \chapter{Automata Editor Design}
 \label{chap:design}

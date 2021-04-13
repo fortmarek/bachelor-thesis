@@ -46,6 +46,7 @@
 \RequirePackage[labelsep=space,singlelinecheck=false,font={up,small},labelfont={sf,bf}]{caption}[2020/05/30]
 \RequirePackage{amsthm}[2020/05/29]
 \RequirePackage{emptypage}[2010/05/30]
+\RequirePackage{dirtree}
 \RequirePackage{biblatex}
 \RequirePackage{tikz}
 \usetikzlibrary{arrows,automata,positioning}
@@ -54,6 +55,8 @@
   node distance=3cm,
   every state/.style={thick, fill=gray!10}
 }
+\RequirePackage{graphicx}
+\graphicspath { {./images/} }
 
 %%% modra
  \definecolor{decoration}{RGB}{0, 122, 195} %CTU blue
@@ -66,6 +69,7 @@
 \addbibresource{bib-database.bib}
 
 \setcounter{secnumdepth}{4}% numbering sections; 4: subsubsection
+\setcounter{tocdepth}{1}
 
 % code listing settings
 \renewcommand\lstlistingname{Výpis kódu}
@@ -251,17 +255,6 @@ Supervisor: \supervisor\\
 % TEMPLATE SETTINGS END
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-%%%%%%%%%%%%%%%%%%%%%%
-% DEMO CONTENTS SETTINGS
-% You may choose to modify this part.
-%%%%%%%%%%%%%%%%%%%%%%
-\usepackage{dirtree}
-\usepackage{lipsum,tikz}
-%%%%%%%%%%%%%%%%%%%%%%
-% DEMO CONTENTS SETTINGS END
-%%%%%%%%%%%%%%%%%%%%%%
-
 \begin{document}
 \frontmatter
 %%%%%%%%%%%%%%
@@ -370,7 +363,7 @@ In Prague on 13th May 2021 \hspace{.3\textwidth} \dotfill
 \frontchapternotprinted{Abstract}
 
 \begin{abstract}% Enter abstract in ENGLISH.
-\lipsum[2]  
+Write abstract here!
 \end{abstract}
 
 \vskip 0.5cm
@@ -430,6 +423,7 @@ In Prague on 13th May 2021 \hspace{.3\textwidth} \dotfill
 DFA & Deterministic Finite Automaton\\
 FA & Finite Automaton\\
 NFA & Nondeterministic Finite Automaton\\
+ALT & Algorithms Library Toolkit\\
 \end{tabular}
 %%%%%%%%%%%%%%%%%%%
 % ABBREVIATIONS END
