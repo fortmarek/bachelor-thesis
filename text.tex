@@ -284,7 +284,7 @@ All of the above features work reliably and are done in intuitive manner - user 
     \caption{Statemaker screenshot}\label{statemaker-screen}
 \end{figure}
 
-\subsection{Existing Applications}
+\subsection{Other Existing Applications}
 
 As the main goal of this thesis is to write a finite automata editor for iPad, in this part I will study existing applications mainly for touch devices. 
 
@@ -299,13 +299,61 @@ There are also apps available as desktop applications. One is a Finite Automaton
     \caption{TuringSim interface screenshot}\label{turingsim-screen}
 \end{figure}
 
-\section{ALT Analysis}
+\section{ALT}
 
 Now I will go over ALT and its features that can be leveraged for simulating FA input. The code of ALT is available on GitLab \cite{gitlab} where there are multiple repositories in group Algorithms Library Toolkit (webui-client, infrastructe, etc.) - that includes repository Algorithms Library Toolkit Core \cite{alt-code}. There we can find algorithms that can later be used for FA editor. The code is divided into multiple modules that are then built and linked together using CMake \cite{cmake}. The most important module for this thesis are \textit{alib2data} and \textit{alib2algo} where alib2data contains FA models and alib2algo algorithms for simulating input.
 
-\section{FA Model}
+\subsection{FA Model}
 
-ALT offers  
+Multiple FA types are supported by ALT - that includes deterministic and nondeterministic finite automaton as well as nondeterministic finite automaton with $\epsilon-transitions$. There is also extended NFA that has regular expressions as their transitions. These models serve as a definition of an automaton - its states, transitions, etc. To create e.g. NFA with $\epsilon-transitions$ one can use its constructor where it is possible to specify its states and input alphabet. For adding transitions there is a method called \lstinline{addTransition}. Both can be seen in figure \ref{epsilon-nfa-methods}.
+
+\begin{figure}
+    \begin{lstlisting}
+        // Creates a new instance of the Automaton
+        // with a concrete initial state.
+        explicit EpsilonNFA ( 
+            ext::set < StateType > states,
+            ext::set < SymbolType > inputAlphabet, 
+            StateType initialState, 
+            ext::set < StateType > finalStates
+        );
+        // Add a transition to the automaton.
+        bool addTransition ( 
+            StateType from,
+            common::symbol_or_epsilon < SymbolType > input,
+            StateType to 
+        );
+    \end{lstlisting}
+    \caption{EpsilonNFA example methods}\label{epsilon-nfa-methods}
+\end{figure}
+
+\subsection{FA Algorithms}
+
+ALT offers multitude of algorithms that can be run on finite automata - such as minimization, determinization, and simulating input. Simulating input can be found in \lstinline{Accept.h} and \lstinline{Run.h}. Where the former is able to determine whether an input is accepted and the latter does the same but a part of its output is also e.g. in which states did the simulation end in.
+
+\section{Strokes Recognition}
+
+The final prototype will include recognizing automaton elements from drawing. In this section I will go over available methods of how to achieve it.
+
+\subsection{Google ML Kit}
+
+Google offers a framework called ML Kit that includes what they call "Digital Ink Recognition". This lets you construct a stroke from points drawn on the screen and create \lstinline{Ink} object from those strokes. It also includes base models for recognizing text and even some basic shapes like arrow and rectangle. If you want to create your own model with TensorFlow Lite \cite{tensorflow}, you are forced to use "Image Labeling". Since the editor should support creating cycles, it is necessary to create a custom model because that shape is not supported by any of the base models for Digital Ink Recognition.
+
+\subsection{Core ML}
+
+Apple's CoreML framework supports variety of use cases - analysis of images, processing text, converting audio to text, and identifying sounds in audio \cite{coreml}. It does not, however, support anything like Digital Ink Recognition. For the editor it is suitable to use analysis of images because it is possible to create an image from the screen and pass that to the model. Apple also provides some models already in CoreML format \cite{coreml-models}. Not any of them are applicable for the FA editor's use case. Therefore, a custom model for CoreML would be necessary as well.
+
+Considering that CoreML is bundled in the system and Google ML Kit needs to be installed separately, increasing app's size and incurring maintenance burden, I opted for CoreML. This decision was also made based on the fact that both frameworks do support TensorFlow, although, for CoreML it needs to be first converted to its format.
+
+\subsection{Creation of CoreML Model}
+
+There are multiple ways how to create CoreML model, though, they generally fall into two categories:
+\begin{itemize}
+    \item ML model created by ML libraries that are not from Apple such as TensorFlow or Keras \cite{keras} and then converted with coremltools \cite{coremltools}.
+    \item ML model created by framework or application that outputs CoreML directly.
+\end{itemize}
+
+For creating CoreML models directly there is either Create ML \cite{create-ml} or turicreate \cite{turicreate}. Create ML, at the time of writing, supports only image classification, whereas turicreate has built-in support for drawing classification. Although, both image classification and drawing classification operate on images, the important distinction is that drawing classification 28x28 grayscale bitmap as input. The drawing classification is also tailored for inputs created by Apple Pencil \cite{drawing-classification}, thus I have chosen to use it instead of libraries such as TensorFlow. It should be noted, though, that turicreate leverages TensorFlow as a lower-level framework and it should serve to streamline development of CoreML models.
 
 \chapter{Automata Editor Design}
 \label{chap:design}
