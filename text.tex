@@ -392,12 +392,25 @@ At the time of writing it is possible to use two UI frameworks offered by Apple 
 
 \subsection{Architecture}
 
-There is no recommended architecture by Apple for apps written on top of SwiftUI frameworks. 
-// TODO
+There is no recommended architecture by Apple for apps written on top of SwiftUI frameworks. It is also entirely possible to create an app without adhering to any architecture. This code, though, is more difficult to maintain for a longer period.
+
+One possible architecture is MVVM \cite{mvvm}. Diagram of this architecture can be seen in figure \ref{mvvm}. It enables developers to have a clear boundary between UI code and business logic and is a good option for either UIKit or SwiftUI applications. One of its drawbacks is that it can sometimes lead to imperative code where developers call a function and act based on its inputs. The alternative are (among others) architectures inspired by Redux. Diagram of Redux is depicted in figure \ref{redux}. The main difference between Redux and MVVM is that MVVM is event-driven whereas Redux is data-driven. Data-driven approach is much more closer to declarative programming since the state of the application describes how it should look. Thus I have decided that Redux-like architecture will be a better option.
+
+One of concrete implementations of Redux architecture is the Composable Architecture by Point-Free \cite{tca}. This architecture is based on Redux but it has some modifications such as handling of side effects. It also makes testing more exhaustive by asserting that no action that you do not expect is run as well as that the state is not changed in any other way than you describe in your test. Considering all of the points given, I have chosen to use the Composable Architecture. 
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{mvvm}
+    \caption{MVVM architecture diagram \cite{mvvm}}\label{mvvm}
+\end{figure}
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{redux}
+    \caption{Redux architecture diagram \cite{react-redux}}\label{redux}
+\end{figure}
 
 \section{ALT Integration}
 
-I have already talked about ALT in chapter \ref{chap:analysis}. I have not discussed there, however, how ALT will be integrated in the application. That is now possible as I have stated that the app will be written in Swift. As already mentioned, ALT is a library written in C++. There exists a Swift-C++ interoperability manifesto \cite{swift-c++-manifesto}. This manifesto goes over what it would take to make C++ and Swift interoperable but not even all functionalities of C++ have their discussions of how they could be ported to Swift. However, there is a well-supported interoperability between Swift and Objective-C \cite{swift-objc-interoperability}.
+I have already talked about ALT in chapter \ref{chap:analysis}. I have not discussed there, however, how ALT will be integrated in the application. That is now possible as I have stated that the app will be written in Swift. As already mentioned, ALT is a library written in C++. There exists a Swift-C++ interoperability manifesto \cite{swift-c++-manifesto}. This manifesto goes over what it would take to make C++ and Swift interoperable but not even all functionalities of C++ have their discussions of how they could be ported to Swift. However, there is a well-supported interoperability between Swift and Objective-C \cite{swift-objc-interoperability}. For Objective-C and C++ interoperability there is a language iteration of Objective-C called Objective-C++. It is even possible to "include pointers to Objective-C objects as data members of C++ classes" \cite{objc++}. I first tried to integrate ALT directly and compile it right via Xcode but due to the fact that ALT is built via CMake \cite{cmake} and does not have a simple setup, I then resorted to pre-building and then bundle the already built frameworks in the application. I will go over the details in \ref{chap:implementation}.
 
 \chapter{Implementation}
 \label{chap:implementation}
