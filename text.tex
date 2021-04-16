@@ -301,7 +301,7 @@ There are also apps available as desktop applications. One is a Finite Automaton
 
 \section{ALT}
 
-Now I will go over ALT and its features that can be leveraged for simulating FA input. The code of ALT is available on GitLab \cite{gitlab} where there are multiple repositories in group Algorithms Library Toolkit (webui-client, infrastructe, etc.) - that includes repository Algorithms Library Toolkit Core \cite{alt-code}. There we can find algorithms that can later be used for FA editor. The code is divided into multiple modules that are then built and linked together using CMake \cite{cmake}. The most important module for this thesis are \textit{alib2data} and \textit{alib2algo} where alib2data contains FA models and alib2algo algorithms for simulating input.
+Now I will go over ALT and its features that can be leveraged for simulating FA input. The code of ALT is available on GitLab \cite{gitlab} where there are multiple repositories in group Algorithms Library Toolkit (webui-client, infrastructe, etc.) - that includes repository Algorithms Library Toolkit Core \cite{alt-code}, a library written in C++ \cite{c++}. There we can find algorithms that can later be used for FA editor. The code is divided into multiple modules that are then built and linked together using CMake \cite{cmake}. The most important module for this thesis are \textit{alib2data} and \textit{alib2algo} where alib2data contains FA models and alib2algo algorithms for simulating input.
 
 \subsection{FA Model}
 
@@ -357,6 +357,47 @@ For creating CoreML models directly there is either Create ML \cite{create-ml} o
 
 \chapter{Automata Editor Design}
 \label{chap:design}
+
+In this chapter I will go over some decisions made, such as which technology I have decided to use, and over the design of the editor - how the app will look and how users will interact with the editor.
+
+\section{Touch Device}
+The main reason why this prototype is meant for a touch device is to simulate as much as possible the experience of drawing FAs on a paper. There were three main options that were possible:
+\begin{itemize}
+    \item create touch-friendly web interface
+    \item implement app for Android
+    \item target iPad devices
+\end{itemize}
+Creating a touch-friendly web interface would have the benefit of being universal and not tied to a specific platform. But native apps offer better precision and developers can tap into OS APIs that are tailored for touch. The choice between Android and iPad was less clear but iPad has the benefit of Apple Pencil \cite{apple-pencil} that offers high precision that will make the user experience better.
+
+\section{Used Technologies}
+
+I will now cover what technologies are used in the app and why I have chosen them. A lot of decisions have been influenced by focusing on iPad, and even more specifically, usage of the app on iPad along with Apple Pencil. 
+
+\subsection{Language}
+
+Choosing a language in which one will write the application is an important first step. For iOS applications I could have used:
+\begin{itemize}
+    \item Objective-C
+    \item Swift
+    \item cross-platform framework
+\end{itemize}
+
+Objective-C was designed by Brad J. Cox at the start of 1980s and was then licensed by NeXT Software in 1988. Then in 1996 NeXT Software was acquired by Apple - along with Objective-C. Apple have then chosen Objective-C as a main language for OS X and in 2007 for the new operating system iOS \cite{objective-c-programming}. On the Apple developer website it is described as "superset of the C programming language and provides object-oriented capabilities and a dynamic runtime" \cite{objective-c}. Objective-C has been thus the main programming language for years. Nowadays, Objective-C is not anymore that popular and ranks at the 23rd place as per TIOBE index \cite{tiobe-index}. Apple has rather shifted their focus to Swift and some of the new frameworks, like SwiftUI \cite{swiftui}, are only available in Swift. Swift is thus a much better option to choose if one is starting a new iOS app.
+
+Using a cross-platform framework - such as React Native \cite{react-native} or Flutter \cite{flutter} - was also a possibility. But to leverage Apple Pencil fully it was necessary to use PencilKit \cite{pencilkit} and for this one would have to write native code. Therefore, I have decided to use Swift as the main language.
+
+\subsection{UI Framework}
+
+At the time of writing it is possible to use two UI frameworks offered by Apple to write UI code. Those are UIKit \cite{uikit} or, already mentioned, SwiftUI \cite{swiftui}. SwiftUI is a newer framework than UIKit, release in 2019 \cite{swiftui-release}. In Thinking in SwiftUI book it is described as "radical departure from UIKit, AppKit, and other object-oriented UI frameworks" \cite{thinking-in-swiftui}. SwiftUI offers a more declarative approach, quite similar to React \cite{react} used in the web development. Declarative UIs have the benefits of less code since it enables the framework to do more on behalf of the developers. This comes at a cost of lesser control. Getting back to SwiftUI, specifically, one of its major drawbacks is that not all components, that are written in UIKit, are available in SwiftUI. But there is very strong support for SwiftUI-UIKit interoperability \cite{swiftui-interop} and thus it is always possible to use UIKit when necessary. The fact that SwiftUI offers faster development due to its declarative nature and also SwiftUI previews \cite{swiftui-preview} has made it a better candidate than UIKit, especially for a prototype. Therefore, I decided to use SwiftUI as the main UI framework.
+
+\subsection{Architecture}
+
+There is no recommended architecture by Apple for apps written on top of SwiftUI frameworks. 
+// TODO
+
+\section{ALT Integration}
+
+I have already talked about ALT in chapter \ref{chap:analysis}. I have not discussed there, however, how ALT will be integrated in the application. That is now possible as I have stated that the app will be written in Swift. As already mentioned, ALT is a library written in C++. There exists a Swift-C++ interoperability manifesto \cite{swift-c++-manifesto}. This manifesto goes over what it would take to make C++ and Swift interoperable but not even all functionalities of C++ have their discussions of how they could be ported to Swift. However, there is a well-supported interoperability between Swift and Objective-C \cite{swift-objc-interoperability}.
 
 \chapter{Implementation}
 \label{chap:implementation}
