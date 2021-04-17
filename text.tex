@@ -412,6 +412,66 @@ One of concrete implementations of Redux architecture is the Composable Architec
 
 I have already talked about ALT in chapter \ref{chap:analysis}. I have not discussed there, however, how ALT will be integrated in the application. That is now possible as I have stated that the app will be written in Swift. As already mentioned, ALT is a library written in C++. There exists a Swift-C++ interoperability manifesto \cite{swift-c++-manifesto}. This manifesto goes over what it would take to make C++ and Swift interoperable but not even all functionalities of C++ have their discussions of how they could be ported to Swift. However, there is a well-supported interoperability between Swift and Objective-C \cite{swift-objc-interoperability}. For Objective-C and C++ interoperability there is a language iteration of Objective-C called Objective-C++. It is even possible to "include pointers to Objective-C objects as data members of C++ classes" \cite{objc++}. I first tried to integrate ALT directly and compile it right via Xcode but due to the fact that ALT is built via CMake \cite{cmake} and does not have a simple setup, I then resorted to pre-building and then bundle the already built frameworks in the application. I will go over the details in \ref{chap:implementation}.
 
+\section{User Interface}
+
+As a final section of this chapter I will go over the design of UI. The design has been heavily influenced by the fact that one of the main goals was to imitate the experience of drawing FAs on a piece of paper. The app should let users to:
+\begin{itemize}
+    \item create FA states, transitions, and cycles
+    \item delete and rearrange all of the above
+    \item name states
+    \item specify symbols for transitions
+    \item simulate input and see whether the input was or was not accepted by the automaton
+\end{itemize}
+
+\subsection{Canvas}
+
+Canvas is the most important part of the editor since it is the space where user can draw FA elements. After each individual stroke, a function will be run that will evaluate the stroke to determine which FA state the user has drawn. The flow of recognizing the FA elements is graphically represented in figure \ref{app-flow}. The app first waits for the user to make a stroke, after a stroke is made its representation is sent to the ML model which recognizes the type of FA element, a state is updated with the new element and it is drawn on the canvas. Then the app again waits for another stroke.
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{app-flow}
+    \caption{Flow of recognizing FA elements from strokes}\label{app-flow}
+\end{figure}
+
+\subsection{State}
+
+The app needs to be able to work with three FA elements - state, transitions and a cycle (a special case of transition that starts and ends in the same state). These elements should be represented the same way as they are in the weighted directed graph representation. That means a state will be rendered as a circle. But it is necessary to also enable user to edit the name of the state. Thus, a text field in the center of the state will be shown. You can see example of a stroke that should be rendered as a state and how it looks like after being recognized in figure \ref{state}. Notice also a button at the top of the circle - this button is for dragging the state. To indicate that the state is final, user should be able to draw another circle where the stroke contains the center of the state that should be final. In figure \ref{final-state} you should see examples of strokes that should be then rendered as a final state.
+
+\begin{figure}
+    \centering
+    \subfigure[Stroke]{\includegraphics[width=0.4\textwidth]{state-stroke}}
+    \subfigure[Rendered state]{\includegraphics[width=0.4\textwidth]{state}}
+    \caption{Example of a state stroke (a) and how it is rendered (b)}\label{state}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \subfigure[]{\includegraphics[width=0.4\textwidth]{final-stroke-1}}
+    \subfigure[]{\includegraphics[width=0.4\textwidth]{final-stroke-2}}
+    \subfigure[]{\includegraphics[width=0.4\textwidth]{final-stroke-3}}
+    \subfigure[]{\includegraphics[width=0.4\textwidth]{final-state}}
+    \caption{(a), (b), (c) are example strokes that should be rendered as a final state (d)}\label{final-state}
+\end{figure}
+
+\subsection{Transition}
+
+A transition is represented as a directed edge between vertices which is a shape of an arrow. The stroke can either be as an arrow or, more conveniently, just a straight line which is faster and easier to draw, especially when the shape must be drawn with a single stroke. Example strokes and a rendered transition are in figure \ref{transition}. Note that the transition can be drawn in no matter which direction. The transition has also a text field positioned above its middle point. Apart from this text field where users can write symbols that the transition should occur on there is also a button with a plus icon. This button allows users to add multiple symbols to a single transition. Leveraging a delimiter, such as comma, was also considered but that could inhibit discoverability. Users can easily remove the transition symbols by tapping a cross symbol beside the symbol. To enable drawing FA with $\epsilon-transitions$ there is also a button with $\epsilon$. When it is tapped, it is added as another symbol for that particulat transitions. A transition with multiple symbols and with $\epsilon-transition$ are in figure \ref{transition-symbols}. Similar to a state there is a drag button to drag the middle point of a transition. This is especially useful when having multiple states on the same horizontal line with a transition going from the leftmost to the rightmost state.
+
+\begin{figure}
+    \centering
+    \subfigure[]{\includegraphics[width=0.4\textwidth]{transition-stroke-1}}
+    \subfigure[]{\includegraphics[width=0.4\textwidth]{transition-stroke-2}}
+    \subfigure[]{\includegraphics[width=0.4\textwidth]{transition-stroke-3}}
+    \subfigure[]{\includegraphics[width=0.4\textwidth]{transition}}
+    \caption{(a), (b), (c) are example strokes that should be rendered as a transition (d)}\label{transition}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \subfigure[Transition with multiple symbols]{\includegraphics[width=0.4\textwidth]{transition-multiple}}
+    \subfigure[$\epsilon-transition$]{\includegraphics[width=0.4\textwidth]{transition-epsilon}}
+    \caption{Transitions with symbols}\label{transition-symbols}
+\end{figure}
+
 \chapter{Implementation}
 \label{chap:implementation}
 
