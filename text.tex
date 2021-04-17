@@ -388,7 +388,7 @@ Using a cross-platform framework - such as React Native \cite{react-native} or F
 
 \subsection{UI Framework}
 
-At the time of writing it is possible to use two UI frameworks offered by Apple to write UI code. Those are UIKit \cite{uikit} or, already mentioned, SwiftUI \cite{swiftui}. SwiftUI is a newer framework than UIKit, release in 2019 \cite{swiftui-release}. In Thinking in SwiftUI book it is described as "radical departure from UIKit, AppKit, and other object-oriented UI frameworks" \cite{thinking-in-swiftui}. SwiftUI offers a more declarative approach, quite similar to React \cite{react} used in the web development. Declarative UIs have the benefits of less code since it enables the framework to do more on behalf of the developers. This comes at a cost of lesser control. Getting back to SwiftUI, specifically, one of its major drawbacks is that not all components, that are written in UIKit, are available in SwiftUI. But there is very strong support for SwiftUI-UIKit interoperability \cite{swiftui-interop} and thus it is always possible to use UIKit when necessary. The fact that SwiftUI offers faster development due to its declarative nature and also SwiftUI previews \cite{swiftui-preview} has made it a better candidate than UIKit, especially for a prototype. Therefore, I decided to use SwiftUI as the main UI framework.
+At the time of writing it is possible to use two UI frameworks offered by Apple to write UI code. Those are UIKit \cite{uikit} or, already mentioned, SwiftUI \cite{swiftui}. SwiftUI is a newer framework than UIKit, release in 2019 \cite{swiftui-release}. In Thinking in SwiftUI book it is described as a "radical departure from UIKit, AppKit, and other object-oriented UI frameworks" \cite{thinking-in-swiftui}. SwiftUI offers a more declarative approach, quite similar to React \cite{react} used in the web development. Declarative UIs have the benefits of less code since it enables the framework to do more on behalf of the developers. This comes at a cost of lesser control. Getting back to SwiftUI, specifically, one of its major drawbacks is that not all components, that are written in UIKit, are available in SwiftUI. But there is very strong support for SwiftUI-UIKit interoperability \cite{swiftui-interop} and thus it is always possible to use UIKit when necessary. The fact that SwiftUI offers faster development due to its declarative nature and also SwiftUI previews \cite{swiftui-preview} has made it a better candidate than UIKit, especially for a prototype. Therefore, I decided to use SwiftUI as the main UI framework.
 
 \subsection{Architecture}
 
@@ -410,7 +410,7 @@ One of concrete implementations of Redux architecture is the Composable Architec
 
 \section{ALT Integration}
 
-I have already talked about ALT in chapter \ref{chap:analysis}. I have not discussed there, however, how ALT will be integrated in the application. That is now possible as I have stated that the app will be written in Swift. As already mentioned, ALT is a library written in C++. There exists a Swift-C++ interoperability manifesto \cite{swift-c++-manifesto}. This manifesto goes over what it would take to make C++ and Swift interoperable but not even all functionalities of C++ have their discussions of how they could be ported to Swift. However, there is a well-supported interoperability between Swift and Objective-C \cite{swift-objc-interoperability}. For Objective-C and C++ interoperability there is a language iteration of Objective-C called Objective-C++. It is even possible to "include pointers to Objective-C objects as data members of C++ classes" \cite{objc++}. I first tried to integrate ALT directly and compile it right via Xcode but due to the fact that ALT is built via CMake \cite{cmake} and does not have a simple setup, I then resorted to pre-building and then bundle the already built frameworks in the application. I will go over the details in \ref{chap:implementation}.
+I have already talked about ALT in chapter \ref{chap:analysis}. I have not discussed there, however, how ALT will be integrated in the application. That is now possible as I have stated that the app will be written in Swift. As already mentioned, ALT is a library written in C++. There exists a Swift-C++ interoperability manifesto \cite{swift-c++-manifesto}. This manifesto goes over what it would take to make C++ and Swift interoperable but not even all functionalities of C++ have their discussions of how they could be ported to Swift. However, there is a well-supported interoperability between Swift and Objective-C \cite{swift-objc-interoperability}. For Objective-C and C++ interoperability there is a language iteration of Objective-C called Objective-C++. It is even e.g. possible to "include pointers to Objective-C objects as data members of C++ classes" \cite{objc++}. I first tried to integrate ALT directly and compile it right via Xcode but due to the fact that ALT is built via CMake \cite{cmake} and does not have a simple setup, I then resorted to pre-building and then bundle the already built frameworks in the application. I will go over the details in chapter \ref{chap:implementation}.
 
 \section{User Interface}
 
@@ -472,8 +472,66 @@ A transition is represented as a directed edge between vertices which is a shape
     \caption{Transitions with symbols}\label{transition-symbols}
 \end{figure}
 
+\subsection{Cycle}
+
+Cycle must be handled differently than a normal transition due to its  shape - that means that it must be recognized as a different class in ML model. The business logic tied to a cycle will not be the same, too. Alike a regular transition, it can be drawn in whichever orientation. The ML model should also support multiple variants of a cycle shape to accomodate most of the cycle strokes drawn by users. It should, however, have the same text field, button for $\epsilon-transition$, as well as multiple transition symbols as a regular transition. The possible strokes and how the cycle should then look like are in figure \ref{cycle}.
+
+\begin{figure}
+    \centering
+    \subfigure[]{\includegraphics[width=0.4\textwidth]{cycle-stroke-1}}
+    \subfigure[]{\includegraphics[width=0.4\textwidth]{cycle-stroke-2}}
+    \subfigure[]{\includegraphics[width=0.4\textwidth]{cycle-stroke-3}}
+    \subfigure[]{\includegraphics[width=0.4\textwidth]{cycle}}
+    \caption{(a), (b), (c) are example strokes that should be rendered as a a cycle (d)}\label{cycle}
+\end{figure}
+
+\subsection{Connecting Transitions and States}
+
+So far, I have only described how transitions and states will be recognized in isolation. In order to create a FA, though, it is necessary to create valid connections between transitions and states. There are multiple cases that the app should support. Similarly to Statemaker \cite{state-maker} it shoud allow users to create a transition between two existing states. But because the app strives to immitate the experience of using a simple paper, it should be less restrictive and enable creating a transition:
+\begin{itemize}
+    \item without any state
+    \item without a start state
+    \item without an end state
+    \item with both start and end states
+\end{itemize}
+For transitions that do not have states on both sides it must be possible to connect a new state to their end. E.g. if user draws a state close to a transition's end and it has no state there, it should connect it and make the transition an incoming edge of that state. Note that if user draws a transition without a start state, it is a valid transition as it will be interpreted as the marking of an initial state.
+
+\subsection{Simulating Input}
+
+The only missing functionality that I have not yet touched upon is simulating input. Considering that a FA is drawn, user should be able to write their desired input into a text field and see whether the input string has or has not been accepted. That can be done via tapping a button with a title "Simulate". If FA accepts the input, the output is denoted with a checkmark emoji (\ref{simulate-accept}) and if not, it is denoted with cross emoji (\ref{simulate-reject}). For convenience there is a button to erase the last character.
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{simulate-accept}
+    \caption{Accepted input}\label{simulate-accept}
+\end{figure}
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{simulate-reject}
+    \caption{Rejected input}\label{simulate-reject}
+\end{figure}
+
+\subsection{Erasing}
+
+As you might have noticed in \ref{simulate-accept} and \ref{simulate-reject} there are two buttons right of the input text field. The left is for drawing mode and the right one lets users to erase specific elements. If a user made a stroke over an element in the eraser mode, it would be deleted. On the left side there is a "Clear" button that clears the whole canvas whenever it is tapped.
+
+\subsection{Text Fields}
+
+One thing I have purposefully omitted is how the user will interact with the app's text fields. There are two options:
+\begin{itemize}
+    \item using keyboard
+    \item via Scribble feature
+\end{itemize}
+
+Using keyboard is the standard way of input for text fields. But this breaks the flow of using the Apple Pencil and does not fulfill the goal of immitating real life experience. Fortunately, from iOS 14 it is possible to use Apple Pencil for writing in text fields \cite{scribble}. This means that it was not necessary to use a custom ML model in order to achieve the same effect. It does have a drawback and that is the Scribble feature is only available from iOS 14.0 and only if the device's language is in English or Traditional and Simplified Chinese. For other scenarios, users can use a keyboard as a fallback.
+
+\subsection{Document Based Apps}
+
+Users should also be able to save their automata and even share them with other people. For this I have leveraged the benefits of the Composable Architecture and saved the whole state of editor to JSON. Then this JSON could be saved as a document in what Apple calls document based apps \cite{document-based}. In document based apps it is also possible to save changes done by the user as they happen, ensuring no progress is ever lost.
+
 \chapter{Implementation}
 \label{chap:implementation}
+
+I have laid out a basic overview of how the app is designed to look. In this chapter I shall go into details of how the most important parts of the app have been implemented.
 
 \chapter{User Testing}
 
