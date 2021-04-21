@@ -692,7 +692,100 @@ extension Array where Element == CGPoint {
 
 \section{ALT Integration}
 
-ALT integration has been discussed both in chapter \ref{chap:analysis} and chapter \ref{chap:design}. In chapter \ref{chap:design} 
+ALT integration has been discussed both in chapter \ref{chap:analysis} and chapter \ref{chap:design}. 
+
+\subsection{Source Code}
+In chapter \ref{chap:design} I have already hinted that I first attempted to integrate the source code directly. Swift Package Manager is a package manager by Apple that is integrated right in Xcode \cite{spm}. Therefore, if I was able to use that for building ALT, others could benefit from this as well as it would make the integration seamless. To create a package via Swift Package Manager one must create \lstinline{Package.swift} manifest where the products and other targets are defined. It is also possible to define C++ headers and flags. But the headers in ALT source code point to already built modules by CMake. This means that when I tried to build the code, I got compiler errors about \lstinline{#include} directive pointing to non-existent headers. This was possible to circumvent by modifying \lstinline{#include} directives to point to existing locations, instead of pointing to the built modules. But doing so would be a maintenance burden. Thus, I have decided not to integrate the source code directly but rather only frameworks built with CMake.
+
+\subsection{Headers}
+ALT's current version only supports \lstinline{gcc} compiler. But to build frameworks for iOS it is necessary to use clang \cite{clang}. At the time of writing ALT is not compilable with the standard library in clang since ALT uses some C++20 features that are only implemented in gcc - for example \lstinline{lexicographical_compare_three_way}, among others. It is possible to point clang to headers from gcc via \lstinline{-cxx-isystem} flag and \lstinline{-stdlib=libstdc++} that tells clang to parse the headers as \lstinline{libstdc++} instead of \lstinline{libc++}. But this is not possible to do since Xcode 10 has dropped support for \lstinline{libstdc++} and all C++ projects must use \lstinline{libc++} standard library. In the future it should be feasible to use the current version of ALT with some newer version of clang as they add support for C++20 features. ALT has only recently started using C++20 features, so in order to fix this issue a new branch \lstinline{libc++-17} was created by Jan Trávníček from a commit from before C++20 features have been introduced.
+
+\subsection{CMake}
+
+There is support for building for iOS platform in CMake directly. To save some upfront work I used ios-cmake toolchain file that builds on top of CMake and makes the setup easier \cite{ios-cmake}. An example of how to build a framework for \lstinline{OS64} (iOS) is in \ref{cmake-build}. The same could then be done for simulator by specifying \lstinline{SIMULATOR64}. This way to different frameworks are built. For combining multiple frameworks with different architectures there is XCFramework \cite{xcframework}. I have created a small shell script in \ref{xcframework-bundle} that creates a new XCFramework from frameworks necessary for the editor app. The built XCFrameworks could then be moved to Xcode.
+
+\begin{lstlisting}[caption=CMake build instructions, label=cmake-build]
+mkdir build
+cd build
+cmake .. -G Xcode \
+-DCMAKE_TOOLCHAIN_FILE=../../ios.toolchain.cmake -DPLATFORM=OS64
+cmake --build . --config Debug
+\end{lstlisting}
+
+\begin{lstlisting}[caption=XCFramework shell script, label=xcframework-bundle]
+#!/bin/sh
+modules=(
+    "alib2std" \
+    "alib2measure" \
+    "alib2abstraction" \
+    "alib2common" \
+    "alib2xml" \
+    "alib2str" \
+    "alib2data" \
+    "alib2algo" \
+)
+for module in "${modules[@]}"
+do
+    xcodebuild -create-xcframework \
+    -framework ../build/$module/Debug-iphoneos/$module.framework \
+    -framework \
+    ../simulator/$module/Debug-iphonesimulator/$module.framework \
+    -framework \
+    ../arm64/$module/Debug-iphonesimulator/$module.framework \
+    -output $module.xcframework
+done
+\end{lstlisting}
+
+\subsection{Objective-C and Swift Wrappers}
+
+With XCFrameworks in Xcode the next step was to write wrappers, so the C++ frameworks could be used in Swift code. As mentioned in chapter \ref{chap:design} it is not possible to interact with C++ code from Swift directly - for this Objective-C++ wrappers had to be written, exposing only Objective-C in its interface. To better encapsulate the wrappers I have also created a separate modules \lstinline{SwiftAutomataLibrary}. The most important part in Objective-C is present in \lstinline{NFA_objc} that interacts with ALT's \lstinline{EpsilonNFA} class. Its interface is in \ref{nfa-objc-interface}. It is initialized with all necessary data to create the underlying automaton and has one method that takes a list of symbols for input and returns \lstinline{bool} based on whether the input was accepted or rejected. In the implementation file all necessary conversions are done. E.g. states are passed to \lstinline{NFA_objc} as \lstinline{NSArray *} where the individual elements are \lstinline{NSString *}. This had to be converted to \lstinline{ext::set<std::string>}.
+
+\begin{lstlisting}[caption={NFA\_objc interface}, label=nfa-objc-interface]
+- (instancetype)init: (NSArray *) states
+    inputAlphabet:(NSArray *) inputAlphabet
+     initialState:(NSString *) initialState
+      finalStates:(NSArray *) finalStates
+      transitions: (NSArray *) transitions;
+- (bool)simulate: (NSArray *) input;
+\end{lstlisting}
+
+The wrapper between Swift and Objective-C was then quite easier as conversions between a lot of types - such as \lstinline{NSArray *} and \lstinline{Array} are done automatically. It also would be possible to use \lstinline{NFA_objc} directly but to have better control I have created \lstinline{NFA} as simple Swift struct. This is the only part that was made public in the SwiftAutomataLibrary module.
+
+\section{App State}
+
+I have already explained how the FA elements are recognized, rendered and how the ALT C++ code is bridged to Swift. Now I would like to explain a little bit more the internal state of the app - of which most substantial part is located in \lstinline{EditorStore.swift}.
+
+\subsection{FA Models}
+
+There are two FA models - \lstinline{AutomatonTransition} and \lstinline{AutomatonState}. Notably, cycle does not have its separate model but is rather an \lstinline{AutomatonTransition}. But since it is rendered differently, it must be recognizable from a normal transition - for this there is \lstinline{enum TransitionType} that has two types - \lstinline{regular} and \lstinline{cycle}. \lstinline{AutomatonTransition} can be seen in \ref{transition-model}. The \lstinline{id} property is generated for each element at the moment when it is created, so it is easily distinguishable. The same is done for \lstinline{AutomatonState}.  Apart from what you see in the code snippet \lstinline{AuomatonTransition} has a set of computed properties like \lstinline{stroke}. Computed properties are great for keeping the state of the model consistent and should be used whenever a property's value can be derived from other properties of that model. \lstinline{AutomatonState} is similar to the transition with some specific properties like \lstinline{isFinalState} denoting whether a state is final or \lstinline{center} used to determine a state's center.
+
+\begin{lstlisting}[caption={Transition model}, label=transition-model]
+struct AutomatonTransition: Equatable, Identifiable, Codable {
+    enum TransitionType: Equatable, Hashable, Codable {
+        case cycle(CGPoint, center: CGPoint, radians: CGFloat)
+        case regular(startPoint: CGPoint, tipPoint: CGPoint, flexPoint: CGPoint)
+    }
+    let id: String
+    var startState: AutomatonState.ID?
+    var endState: AutomatonState.ID?
+    var currentSymbol: String = ""
+    var symbols: [String] = []
+    var includesEpsilon: Bool = false
+    var type: TransitionType
+    var currentFlexPoint: CGPoint? = nil
+}
+\end{lstlisting}
+
+\begin{lstlisting}[caption={State model}, label=state-model]
+struct AutomatonState: Equatable, Identifiable, Codable {
+    let id: String
+    var name: String = ""
+    var isFinalState: Bool = false
+    var center: CGPoint
+    let radius: CGFloat
+    var currentDragPoint: CGPoint
+}
+\end{lstlisting}
 
 \chapter{User Testing}
 
