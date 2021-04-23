@@ -906,7 +906,108 @@ store.receive(
 
 \section{Usability Testing}
 
+Usability testing does not have a strict definition but in general it should refer to testing that evaluates a product or system that is not automated. However, in a book Handbook of Usability Testing they have narrowed this down to "a process that employs people people as testing participants who are representative of the target audience to evaluate the degree to which a product meets specific usability criteria" \cite{handbook-usability-testing}. This book has also been used further in this section to define types of tests and their recommended techniques with which they should be conducted.
 
+In the book Handook of Usability Testing the authors divide usability tests into five distinct categories: exploratory, assesment, validation, and comparison. Each test differs by its acceptance criteria as well as in which phase of the development it should be done. As the final product of this thesis is a prototype, the exploratory test is the most suitable.
+
+The primary focus of exploratory tests should be on the main functionalities of the app and to assess answers to questions such as how intuitive the design is, how valuable is the product to the user, which functionality will need to be documented via a tutorial or help, etc. This type of test is also different from the others in that it is expected that the moderator conducting the test will communicate with the user extensively - whereas the other tests should be possible to finish without moderator stepping in.
+
+\subsection{Test Plan}
+
+Before tests could take place, it was necessary to create a test plan that was to be followed in the tests themselves. Test plans do not have to have the same components but the structure of the test plan for the Automata Editor app consists of:
+\begin{itemize}
+    \item Methodology
+    \item Participant characteristics
+    \item Introduction to the session
+    \item Task list
+    \item Final feedback
+\end{itemize}
+
+As outlined above, the test will be exploratory, implicating intensive interaction between the user and the mediator. Apart from that, it will be measured how long the individual tasks will take.
+
+Before each test, the participants will be sent a questionnaire to assess their charateristics. It will include the following questions:
+\begin{itemize}
+    \item How familiar are you with finite automata? (rated 1-5)
+    \item Do you have prior experience with software for creating and editing finite automata?
+    \item How familiar are you with using Apple Pencil in productivity applications - such as note-taking, drawing, creating diagrams, etc.?
+    \item Could you provide examples of software that you use with Apple Pencil?
+\end{itemize}
+These questions, although self-evaluated, should give a clearer picture of the user's previous experience with either finite automata or using of iPad.
+
+During the introduction to the test, participants will be asked to think aloud, if they are comfortable with it. It is beneficial to know the thinking process as that can uncover more about the prototype. Then the user will be asked to do five tasks. These tasks are of two types:
+\begin{itemize}
+    \item Draw automaton based on a figure and test prescribed inputs.
+    \item Draw automaton based on a formal definition of a language. User has to come with inputs to test that it works properly.
+\end{itemize}
+
+The second type of tests (tasks D and E) is more complicated and therefore it will be done after the first one (tasks A-C). The tasks for each type will be randomized. Below you can find the individual tasks:
+
+\begin{itemize}
+    \item Task A:\\ 
+    Create the automaton in \ref{task-a-automaton} and test the following inputs:
+    \begin{itemize}
+        \item AA
+        \item BA
+        \item B
+        \item AAA
+        \item ABA
+        \item A
+    \end{itemize}
+    Then modify this automaton without clearing the canvas in such a way that it represents automaton in \ref{task-a-automaton-modified} and test the following inputs:
+    \begin{itemize}
+        \item ABBA
+        \item ABAABA
+        \item AAA
+        \item BAB
+        \item BBB
+    \end{itemize}
+    \item Task B:\\ 
+    Create the automaton in \ref{task-b-automaton} and test the following inputs:
+    \begin{itemize}
+        \item DDE
+        \item DEF
+        \item DE
+        \item EF
+        \item EFE
+        \item DDDDE
+        \item DDDDF
+    \end{itemize}
+    \item Task C:\\ 
+    Create the automaton in \ref{task-c-automaton} and test the following inputs:
+    \begin{itemize}
+        \item A
+        \item BA
+        \item AB
+        \item ABB
+    \end{itemize}
+    \item Task D:\\
+    Create automaton for the following language:\\
+    \textit{L} = \{$(10)^{n}$: n $\in$ \textit{N}\}\\
+    Simulate at least 4 inputs to test whether the automaton is behaving correctly.
+    \item Task C:\\
+    Create automaton for the following language:\\
+    \textit{L} = \{w: w $\in$ $\{0,1\}^{*}$ $\wedge$ w starts with the string 011\}
+\end{itemize}
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{basic_automaton}
+    \caption{Task A automaton}\label{task-a-automaton}
+\end{figure}
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{basic_automaton_2}
+    \caption{Task A modified automaton}\label{task-a-automaton-modified}
+\end{figure}
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{automaton_cycle}
+    \caption{Task B automaton}\label{task-b-automaton}
+\end{figure}
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{epsilon_automaton}
+    \caption{Task C automaton}\label{task-c-automaton}
+\end{figure}
 
 \chapter{Conclusion}
 

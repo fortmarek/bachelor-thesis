@@ -21,7 +21,7 @@ Participants will be asked to share their thought process aloud - if they are co
 
 Create the following automaton:
 
-![](basic_automaton.png)
+![](images/basic_automaton.png)
 
 Simulate following inputs:
 - AA
@@ -33,7 +33,7 @@ Simulate following inputs:
 
 Then modify this automaton without clearing the canvas in such a way that it represent this automaton:
 
-![](basic_automaton_2.png)
+![](images/basic_automaton_2.png)
 
 And simulate following inputs:
 - ABBA
@@ -46,7 +46,7 @@ And simulate following inputs:
 
 Create the following automaton:
 
-![](automaton_cycle.png)
+![](images/automaton_cycle.png)
 
 Simulate following inputs:
 - DDE
@@ -62,7 +62,7 @@ Simulate following inputs:
 
 Create the following automaton:
 
-![](epsilon_automaton.png)
+![](images/epsilon_automaton.png)
 
 Simulate following inputs:
 - A
