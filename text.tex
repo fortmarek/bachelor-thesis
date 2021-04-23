@@ -33,7 +33,7 @@ Let me now introduce you to the structure of the rest of the thesis:
 
 \item In \textbf{Chapter 5} I will write about the implementation.
 
-\item \textbf{Chapter 6} will go into the specifics of user testing and its outcomes.
+\item \textbf{Chapter 6} will go into the specifics of usability testing and its outcomes.
 
 \item \textbf{Conclusion} is the last chapter of this thesis where I will assess the success of fulfilling aforementioned goals and lay out possible future development.
 
@@ -762,8 +762,16 @@ There are two FA models - \lstinline{AutomatonTransition} and \lstinline{Automat
 \begin{lstlisting}[caption={Transition model}, label=transition-model]
 struct AutomatonTransition: Equatable, Identifiable, Codable {
     enum TransitionType: Equatable, Hashable, Codable {
-        case cycle(CGPoint, center: CGPoint, radians: CGFloat)
-        case regular(startPoint: CGPoint, tipPoint: CGPoint, flexPoint: CGPoint)
+        case cycle(
+            CGPoint, 
+            center: CGPoint, 
+            radians: CGFloat
+        )
+        case regular(
+            startPoint: CGPoint, 
+            tipPoint: CGPoint, 
+            flexPoint: CGPoint
+        )
     }
     let id: String
     var startState: AutomatonState.ID?
@@ -787,7 +795,118 @@ struct AutomatonState: Equatable, Identifiable, Codable {
 }
 \end{lstlisting}
 
-\chapter{User Testing}
+\subsection{Simulating Input}
+
+Simulating automaton's input is the main feature of the prototype. Once a user taps on "Simulate" button, \lstinline{simulateInput} action is triggered. There some preliminary checks are made - such as there is an initial state (\ref{initial-state-check}. If a check failed, the app shows the user the exact reason why it failed to make it easier to correct it. In case all preliminary checks succeed, the action returns \lstinline{Effect} with the result of the simulation. \lstinline{Effect}s are a mechanism to interact with asynchronous functions and services in general. The initialization of the \lstinline{Effect} is in \ref{simulate-input-effect}. You can also see that a \lstinline{alaphatSymbols} variable is used there. Automaton's alphabet is constructed from the symbols defined for the automaton's transitions. In \lstinline{AutomataLibraryService} simulation is run on \lstinline{NFA} Swift wrapper that was discussed earlier. Only the mapping of \lstinline{transitions} property needed multiple lines of code due to the fact that a name of the state should be used instead of \lstinline{AutomatonState}'s \lstinline{id}.
+
+\begin{lstlisting}[caption={Check for initiail state}, label=initial-state-check]
+guard
+    let initialState = state.initialStates.first
+else {
+    state.outputString = "No initial state"
+    return .none
+}
+\end{lstlisting}   
+
+\begin{lstlisting}[caption={Effect for simulating input}, label=simulate-input-effect]
+env.automataLibraryService.simulateInput(
+        input,
+        state.automatonStates,
+        initialState,
+        state.finalStates,
+        alphabetSymbols,
+        state.transitions
+    )
+\end{lstlisting}
+
+\begin{lstlisting}[caption={\lstinline{NFA} initialization in \lstinline{AutomataLibrarryService}}, label=nfa-init]
+NFA(
+    states: states.map(\.name),
+    inputAlphabet: alphabet,
+    initialState: initialState.name,
+    finalStates: finalStates.map(\.name),
+    transitions: transitions
+        .compactMap { transition -> Transition? in
+            guard
+                let startState = states.first(
+                    where: { $0.id == transition.startState }
+                ),
+                let endState = states.first(
+                    where: { $0.id == transition.endState }
+                )
+            else { return nil }
+            return Transition(
+                fromState: startState.name,
+                toState: endState.name,
+                symbols: transition.symbols
+                    + (
+                        transition.currentSymbol.isEmpty ? 
+                        [] : [transition.currentSymbol]
+                    ),
+                isEpsilonIncluded: transition.includesEpsilon
+            )
+        }
+)
+.simulate(input: input)
+\end{lstlisting}
+
+\section{Dragging}
+
+Dragging is an important feature that lets users rearrange the automaton's elements. Both states and transitions should be draggable. When a button for dragging, discussed in chapter \ref{chap:design}, is moved by the user, an action is triggered - it can be either \lstinline{stateDragPointChanged} or \lstinline{transitionFlexPointChanged} depending on the FA element.
+
+\subsection{Dragging Transitions}
+
+Transitions are dragged with what I have called a \lstinline{flexPoint}. The transition is thus constructed with three points instead of two - start point, flex point and tip point. But doing so makes the curve of the transition sharp at the flex point. To make the change of the direction taking place at the flex point smooth I have used a library called SwiftSplines \cite{swiftsplines}. A spline is "a piecewise polynomial in which the coefficients of each polynomial are fixed between 'knots' or joints", using a definition from a Cubic Splines paper \cite{cubic-splines}.
+
+\subsection{Dragging States}
+
+States are dragged as a whole and thus their shape is not changed during that process. However, when a state has transitions connected to it, these transitions have to be changed as the state is dragged.
+
+\chapter{Testing}
+\label{chap:testing}
+
+Firstly, I will discuss how the app has been tested with automated tests. After that I will go into how the usability testing has been conducted and what were its results and outcomes.
+
+\section{Automated Testing}
+
+Automated testing is an important part of a software project to ensure everything is working correctly and no regressions are made during the development. It also increases the confidence of doing refactoring. The Composable Architecture unit testing is built on top of XCTest framework that is the bundled framework for testing Swift or Objective-C in Xcode. The goal of the testing in the Composable Architecture was to make tests more exhaustive, ergonomic and concise.
+
+The main component for testing in the Composable Architecture is \lstinline{TestStore}. This component has a method called \lstinline{send} that takes as an input an action and a closure in which you describe how you expect the state to be modified. There is also a \lstinline{receive} method that asserts receival of a new action not triggered by the user, but rather returned from an effect. An example showcasing both \lstinline{send} and \lstinline{receive} methods can be seen in \ref{test-state} - there \lstinline{strokesChanged} action is triggered first that simulates user drawing a stroke. When a stroke is drawn, it is sent to \lstinline{AutomataLibraryService} that returns effect with the recognized element (note that in the tests this compoment is mocked). When the new action \lstinline{automataShapeClassified} is received, we assert that it is added to the state.
+
+It should be noted that the paradigm of this style of unit testing is focused on flows, rather than individual functions where the test asserts output for a given input - although individual functions can still be tested by sending a single action to the test store and asserting the state's changes. This is in order to make tests more concise and be closer to how the app will be used by the user. It does not mean, however, that the tests can be less reliable because still a single component is tested and all non-deterministic functionality should be in the store's environment, which is mocked during the testing. 
+
+\begin{lstlisting}[caption={Testing creation of state}, label=test-state]
+store.send(
+    .strokesChanged(
+        currentStrokes + [
+            Stroke(controlPoints: [center])
+        ]
+    )
+)
+scheduler.advance()
+
+store.receive(
+    .automataShapeClassified(
+        .success(
+            .state(
+                Stroke(
+                    controlPoints: [center]
+                )
+            )
+        )
+    )
+) {
+    $0.automatonStatesDict[id] = AutomatonState(
+        id: id,
+        center: center,
+        radius: radius
+    )
+}
+\end{lstlisting}
+
+\section{Usability Testing}
+
+
 
 \chapter{Conclusion}
 
