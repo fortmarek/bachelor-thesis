@@ -856,11 +856,56 @@ Dragging is an important feature that lets users rearrange the automaton's eleme
 
 \subsection{Dragging Transitions}
 
-Transitions are dragged with what I have called a \lstinline{flexPoint}. The transition is thus constructed with three points instead of two - start point, flex point and tip point. But doing so makes the curve of the transition sharp at the flex point. To make the change of the direction taking place at the flex point smooth I have used a library called SwiftSplines \cite{swiftsplines}. A spline is "a piecewise polynomial in which the coefficients of each polynomial are fixed between 'knots' or joints", using a definition from a Cubic Splines paper \cite{cubic-splines}.
+Transitions are dragged with what I have called a \lstinline{flexPoint}. The transition is thus constructed with three points instead of two - start point, flex point and tip point. But doing so makes the curve of the transition sharp at the flex point. To make the change of the direction taking place at the flex point smooth I have used a library called SwiftSplines \cite{swiftsplines}. A spline is "a piecewise polynomial in which the coefficients of each polynomial are fixed between 'knots' or joints", using a definition from a Cubic Splines paper \cite{cubic-splines}. You can see how the transition looked like before applying the cubic spline and after in \ref{spline}. In \ref{spline-code} it is possible to see how it is created in code. Note the important parameter \lstinline{resolution} that directs how "smooth" the curve will be where higher resolution will increase the number of points used for the curve.
+
+\begin{figure}
+    \centering
+    \subfigure[]{\includegraphics[width=0.4\textwidth]{spline-before}}
+    \subfigure[]{\includegraphics[width=0.4\textwidth]{spline-after}}
+    \caption{Transition before using cubic spline (a) and after (b)}\label{spline}
+\end{figure}
+
+\begin{lstlisting}[caption={Creating spline points}, label=spline-code]
+let points = [startPoint, flexPoint, tipPoint].compactMap { $0 }
+let spline = Spline(
+    values: points
+)
+
+let resolution = 100
+let splinePoints: [CGPoint] = (
+    0...(points.count - 1) * resolution
+)
+.map { offset in
+    let argument = CGFloat(offset)/CGFloat(resolution)
+    return spline.f(t: argument)
+}
+\end{lstlisting}
 
 \subsection{Dragging States}
 
-States are dragged as a whole and thus their shape is not changed during that process. However, when a state has transitions connected to it, these transitions have to be changed as the state is dragged.
+States are dragged as a whole and thus their shape is not changed during that process - only variable in this process is a center of a given state. However, when a state has transitions connected to it, these transitions have to be changed as the state is dragged as well. There are three types of transitions that can be connected to a state - a transition that corresponds to incoming or outcoming edge and also a cycle. For cycles the app stores an angle between the single point that intersects with the state and a vector going from a center of the state and its topmost point. When the center is moved, the intersection point is recalculated with the angle that is stored in the app's state. For transitions other than cycles I take advantage of the \lstinline{flexPoint} and recompute \lstinline{startPoint} or \lstinline{endPoint} (depending on the transition) as the intersection point on the shortest path between the new center and the aforementioned \lstinline{flexPoint}. You can see that logic in \ref{compute-tippoint} for transitions that are the incoming edge.
+
+\begin{lstlisting}[caption={Calculation of new \lstinline{tipPoint}}, label=compute-tippoint]
+state.transitions
+.filter { 
+    $0.endState == automatonStateID 
+    && $0.endState != $0.startState 
+}
+.forEach { transition in
+    guard
+        let flexPoint = transition.flexPoint,
+        let endStateID = transition.endState,
+        let endState = state.automatonStatesDict[endStateID]
+    else { return }
+    let vector = Vector(endState.center, flexPoint)
+    state.transitionsDict[transition.id]?.tipPoint = vector.point(
+        distance: endState.radius, 
+        other: endState.center
+    )
+}
+\end{lstlisting}
+ 
+\section{DOCUMENTGROUP!}
 
 \chapter{Testing}
 \label{chap:testing}
@@ -927,9 +972,9 @@ As outlined above, the test will be exploratory, implicating intensive interacti
 
 Before each test, the participants will be sent a questionnaire to assess their charateristics. It will include the following questions:
 \begin{itemize}
-    \item How familiar are you with finite automata? (rated 1-5)
+    \item How familiar are you with finite automata? (rated 1-5 where 5 is "expert")
     \item Do you have prior experience with software for creating and editing finite automata?
-    \item How familiar are you with using Apple Pencil in productivity applications - such as note-taking, drawing, creating diagrams, etc.?
+    \item How familiar are you with using Apple Pencil in productivity applications - such as note-taking, drawing, creating diagrams, etc.? (rated 1-5 where 5 is "expert")
     \item Could you provide examples of software that you use with Apple Pencil?
 \end{itemize}
 These questions, although self-evaluated, should give a clearer picture of the user's previous experience with either finite automata or using of iPad.
@@ -986,7 +1031,8 @@ The second type of tests (tasks D and E) is more complicated and therefore it wi
     Simulate at least 4 inputs to test whether the automaton is behaving correctly.
     \item Task C:\\
     Create automaton for the following language:\\
-    \textit{L} = \{w: w $\in$ $\{0,1\}^{*}$ $\wedge$ w starts with the string 011\}
+    \textit{L} = \{w: w $\in$ $\{0,1\}^{*}$ $\wedge$ w starts with the string 011\}\\
+    Simulate at least 4 inputs to test whether the automaton is behaving correctly.
 \end{itemize}
 
 \begin{figure}
@@ -1007,6 +1053,83 @@ The second type of tests (tasks D and E) is more complicated and therefore it wi
 \begin{figure}
     \includegraphics[width=\textwidth]{epsilon_automaton}
     \caption{Task C automaton}\label{task-c-automaton}
+\end{figure}
+
+\subsection{Test Results}
+
+The tests have been done with a total of 8 participants. The results can be seen in \ref{test-results}. I have not included two questions in the table. One is whether the participant has prior experience with software for creating and editing finite automata - for which all answers have been "No". This indicates that most (in this case all) people have always used a regular paper for sketching their automata. The second question not included is examples of software that the participant has used with Apple Pencil: most of it were apps for making notes such as Notability or GoodNotes. From the time results the two fastest times are by people who rated themselves as FA "experts". In contrast with that is Apple Pencil familiarity having not a great impact on the time results. 
+
+The following list summarizes what the participants have said they did not understand and where the design was not intuitive enough:
+\begin{itemize}
+    \item Plus button for adding multiple symbols to a single transition.
+    \item When state is deleted it's hard to reconnect it to transitions.
+    \item Hard to understand output when it does not include any words.
+    \item $\epsilon$ button was often not obvious.
+    \item Clear was mistaken for back, deleting the whole automaton.
+    \item Erasing button is not intuitive.
+    \item It is hard to tell if simulate button works if the output does not change.
+\end{itemize}
+Some of these points could be resolved by adding a quick tutorial and help that would introduce users into how the app should be used, rather than expecting users to figure it out on their own. The tutorial is also important due to the fact that states and transitions are not added via a button and thus the users need to try and see how the app responds to their drawing. This can be a daunting first experience. 
+
+The help feature was also mentioned, among other, as one of the following improvements mentioned by the participants:
+\begin{itemize}
+    \item Missing switch gesture for Apple Pencil.
+    \item Back button to undo last change.
+    \item Larger bottom control panel.
+    \item Help or quick tutorial describing how the app should be used.
+    \item Keyboard is too intrusive and often overlays text field currently being edited.
+    \item It is not possible to make a state smaller.
+    \item Make naming states not mandatory.
+    \item Step-by-step simulation would help with visualization of how the FA works.
+    \item Edit mode to hide buttons.
+\end{itemize}
+From this list, most of the items are small improvements and could be easily implemented into the app. I would like to expand on "step-by-step simulation". This feature would help with understanding better why the automaton rejected the input strings. It would also make it a great tool for learning and understanding how the automaton works. Implementing for DFAs should be possible as the automaton is always at one state only, making the visualization straightforward. However, for NFAs this is not the case. Therefore, the app could either offer to limit the automaton to a specific type or limit the visualization to only one possible path leading to rejection or acceptance. The usability testing has also uncovered bugs:
+\begin{itemize}
+    \item Input by keyboard is sometimes inadvartently triggered.
+    \item Cycle is often mistaken for a state.
+    \item Eraser sometimes does not work.
+    \item It is not possible to make a final state a non-final one without deleting it.
+    \item When user taps the screen in quick succession, transitions appear in the same place.
+    \item Text field for transitions does not trim newlines.
+\end{itemize}
+
+Apart from things that could be improved, at the end of each test I have asked the participants to say what they felt were good things about the app:
+\begin{itemize}
+    \item Eases learning of FAs.
+    \item Simulating inputs is quick.
+    \item Abillity to save the FA in a file.
+    \item Saving to a file is automatic.
+    \item Making transitions with a simple line is fast.
+    \item Recognizing elements is almost instant.
+    \item Creating automata is quick once user knows how to use the editor.
+    \item Connecting elements works well.
+    \item Interacting with elements is intuitive.
+\end{itemize}
+The positive comments show that the basic interactions with the elements work well and offer enjoyable experience for the users. And apart from enjoyable experience it makes creating the automata quick - which is important to convince people to use the app, rather than resorting to a regular paper.
+
+\begin{figure}
+\begin{tabular}{||c|c|c|c||} 
+    \hline
+    Participant & Total time (mm:ss) & FA familiarity & Apple Pencil faimiliarity \\ [0.5ex] 
+    \hline\hline
+    A & 29:28 & 1 & 4\\ 
+    \hline
+    B & 10:30 & 5 & 1\\ 
+    \hline
+    C & 08:48 & 5 & 4\\ 
+    \hline
+    D & 15:26 & 3 & 1\\ 
+    \hline
+    E & 19:30 & 3 & 2\\ 
+    \hline
+    F & 25:12 & 3 & 4\\ 
+    \hline
+    E & 33:23 & 3 & 4\\ 
+    \hline
+    G & 25:58 & 5 & 3\\ 
+    \hline
+\end{tabular}
+\caption{Usability testing results}\label{test-results}
 \end{figure}
 
 \chapter{Conclusion}
