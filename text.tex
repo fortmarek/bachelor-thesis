@@ -9,23 +9,23 @@ Theory of finite automata is an important part of computer science curriculum at
 
 Furthermore, I will expand on the recent work done at FIT CTU in Prague concerning development of algorithms library and, more importantly for this thesis, finite automata algorithms including simulating input. This library is named \href{https://alt.fit.cvut.cz/}{Algorithms Library Toolkit} (ALT) \cite{alt} and it has been open sourced.
 
-The main motivation of this thesis is to improve how students learn finite automata and more specifically, enhance the current course BI-AAG that is taught at FIT CTU in Prague. It is also an opportunity to try out algorithms library in practice and create a concrete example of how it can be leveraged.
+The main motivation of this thesis is to improve how students learn finite automata and more specifically, enhance the current course BI-AAG that is taught at FIT CTU in Prague. It is also an opportunity to use the ALT in practice and create a concrete example of how it can be leveraged.
 
 \section{Thesis Goals}
 
 The main goal of this thesis is to implement a prototype of an automata editor for iPad. This application should enable users to create and edit finite automata with emphasis on touch-based input.
-I will also study the web interface of ALT \cite{state-maker} \cite{web-alt}, ALT itself focusing on design and drawing of finite automata, the possibilities of strokes detection on touch devices, and the approaches of shape detection, especially those used in automata drawing on iOS platform.
+I will also study the ALT's web interface \cite{state-maker} \cite{web-alt}, ALT itself focusing on design and drawing of finite automata, the possibilities of strokes detection on touch devices, and the approaches of shape detection, especially those used in automata drawing on iOS platform.
 
 After the initial study of current approaches and theory, I will implement a prototype of a finite automata editor iPad app that will be capable of recognizing finite automaton elements from strokes and simulating input.
 
-I will then conduct usability testing to assess the usability and shortcomings of the prototype.
+I will then conduct a usability testing to assess the usability and shortcomings of the prototype.
 
 \section{Thesis Structure}
 
 Let me now introduce you to the structure of the rest of the thesis:
 
 \begin{itemize}
-\item In \textbf{Chapter 2} I will go over the theoretical concepts to properly explain terms and concepts on which it will be built upon later.
+\item In \textbf{Chapter 2} I will go over the necessary theoretical background to properly explain terms and concepts on which it will be built upon later.
 
 \item \textbf{Chapter 3} is concerned with the analysis of already existing solutions of creating automata editor, the existing ALT web interface and ALT itself.
 
@@ -81,7 +81,7 @@ For a binary alphabet $\Sigma$ = \{0, 1\} a formal language over $\Sigma$ is the
 
 \subsection{Grammar}
 
-Grammars are used to describe languages. Below you can find how they are defined:
+Grammars are used to describe languages. You can find how they are defined below:
 
 \begin{definition}
     \textit{Grammar} is a quadruple of G = (N, $\Sigma$, P, S) where:
@@ -132,14 +132,14 @@ Classification of languages, also known as the Chomsky hierarchy, has the follow
     We say that language is:
 \end{definition}
 \begin{enumerate}
-    \item \textit{formal} if it is a formal language but is neither regular, context-free, context-sensitive, nor recursive enumerable. These languages are not recognized by Turing machine.
+    \item \textit{formal} if it is a formal language but is neither regular, context-free, context-sensitive, nor recursive enumerable. These languages are not recognized by a Turing machine.
     \item \textit{recursively enumerable} if and only if $\exists$ unrestricted grammar which generates it
     \begin{itemize}
-        \item recognized by Turing machine
+        \item recognized by a Turing machine
     \end{itemize}
     \item \textit{context-sensitive} if and only if $\exists$ context-sensitive grammar which generates it
     \begin{itemize}
-        \item recognized by linear bounded Turing machine
+        \item recognized by a linear bounded Turing machine
     \end{itemize}
     \item \textit{context-free} if and only if $\exists$ context-free grammar which generates it
     \begin{itemize}
@@ -147,15 +147,15 @@ Classification of languages, also known as the Chomsky hierarchy, has the follow
     \end{itemize}
     \item \textit{regular} if and only if $\exists$ regular grammar that generates it
     \begin{itemize}
-        \item recognized by finite automaton
+        \item recognized by a finite automaton
     \end{itemize}
 \end{enumerate}
 
-In this thesis we will be mainly interested in regular languages / grammars since those are recognized by finite automata. Finite automata will be defined in the following section.
+For most of the thesis, only regular languages will be needed since those are recognized by finite automata. Finite automata will be defined in the following section.
 
 \section{Finite Automata}
 
-The final editor app will be for finite automata, therefore they are very important for this thesis. Informally, a finite automaton is a model for simple computation. States, that serve as memory, and transitions together form a \textit{control unit}. Along with a control unit, the finite automaton has a \textit{read-only input tape}, which is divided into individual cells, and the \textit{head} that scans the input tape as the automaton continuously reads it, cell by cell. Automaton starts in its initial state and with head pointing at the first cell. As the input is read, the head moves until it has read all of the input tape. If there is a missing transition for an input, the automaton does not accept the input. Otherwise, it accepts the input if it is in an end state at the end of the input.
+The final editor app will be for finite automata, therefore they are very important for this thesis. Informally, a finite automaton is a model for simple computation. States, that serve as memory, and transitions together form a \textit{control unit}. Along with a control unit, the finite automaton has a \textit{read-only input tape}, which is divided into individual cells, and the \textit{head} that scans the input tape as the automaton continuously reads it, cell by cell. Automaton starts in its initial state and with head pointing at the first cell. As the input is read, the head moves until it has read all of the input tape. If there is a missing transition for an input, the automaton does not accept the input. Otherwise, it accepts the input if it is in a final state at the end of the input.
 
 Let's define a finite automaton formally:
 \begin{definition}
@@ -163,23 +163,23 @@ Let's define a finite automaton formally:
     \begin{itemize}
         \item \textit{Q} is a finite non-empty set of states
         \item $\Sigma$ is a finite input alphabet
-        \item $\delta$ is the transition function (the exact definition is determined by which type of finite automaton it is - see below)
+        \item $\delta$ is the transition function (the exact definition is determined by which type of a finite automaton it is - see below)
         \item $\textit{q}_0 \in \textit{Q}$ is the initial state
         \item $\textit{F} \subseteq \textit{Q}$ is the set of initial states
     \end{itemize}
 \end{definition}
 
-Finite automaton can also be either \textit{deterministic} finite automaton or \textit{nondeterministic} finite automaton. This dictates the exact definition of $\delta$ - transition function.
-For deterministic finite automaton (DFA) the definition of $\delta$ is:\\
+Finite automaton can also be either a \textit{deterministic} finite automaton or a \textit{nondeterministic} finite automaton. This dictates the exact definition of $\delta$ - transition function.
+For a deterministic finite automaton (DFA) the definition of $\delta$ is:\\
 \centerline{$\delta$ is a mapping from \textit{Q} $\times$ $\Sigma$ to \textit{Q}}
-$\delta$ for nondeterministic finite automaton (NFA) is defined as:\\
+$\delta$ for a nondeterministic finite automaton (NFA) is defined as:\\
 \centerline{$\delta$ is a mappping from \textit{Q} $\times$ $\Sigma$ into the set of all subsets \textit{Q} (denoted by $2^\textit{Q}$)}
-Expanding upon the difference between the definition of the transition function:
+Expanding upon the difference between the definitions of the transition function:
 \begin{itemize}
     \item DFA can only transition from one state to another, e.g. from $\textit{q}_0$ to $\textit{q}_1$ ($\textit{q}_0$, $\textit{q}_1$ $\in$ \textit{Q})
     \item NFA can transition to a set of states, e.g. from $\textit{q}_0$ to $\textit{q}_1$ ($\textit{q}_0$, $\textit{q}_1$, $\textit{q}_2$ $\in$ \textit{Q})
 \end{itemize}
-If we change the definition of NFA's $\delta$ to a mapping from \textit{Q} $\times$ ($\Sigma \cup \{\epsilon\}$) we allow, what are called, $\epsilon$-transitions that allow us to move to a different state while not reading any input from the tape. This finite automaton is then called \textit{nondeterministic finite automaton with $\epsilon-transitions$}.
+If we change the definition of NFA's $\delta$ to a mapping from \textit{Q} $\times$ ($\Sigma \cup \{\epsilon\}$) we allow, what are called, $\epsilon$-transitions that allow us to move to a different state while not reading any input from the tape. This finite automaton is then called a \textit{nondeterministic finite automaton with $\epsilon$-transitions}.
 
 \subsection{Representation of Finite Automata}
 
@@ -189,9 +189,9 @@ Finite automata's transition functions $\delta$ are generally represented in the
     (NFA) $\delta$(\textit{S}, 0) = \{\textit{S}, \textit{A}\} (transition from the state \textit{S} and symbol 0 to the states \textit{S} and \textit{A})\\
     (DFA) $\delta$(\textit{A}, 0) = \textit{B} (transition from the state \textit{A} and symbol 0 to a single state, not a set of states, \textit{B})
     \item \textit{Weighted directed graph} (state diagram)\\
-    Automata can be represented graphically as directed weighted graphs. Each state is represented as a vertice in the graph and final states are recognized by being a double circle, instead of a single one. Initial state is the one with an incoming edge. The transitions are then directed edges between states. You can see FA represented as weighted directed graph in \ref{graph-representation}
+    Automata can be represented graphically as directed weighted graphs. Each state is represented as a vertice in the graph and final states are recognized by being a double circle, instead of a single one. Initial state is the one with an incoming edge. The transitions are then directed edges between states. You can see a FA represented as a weighted directed graph in \ref{graph-representation}.
     \item \textit{Table}\\
-    Table representation has in the first column all states where initial state is marked with $\rightarrow$ while final states is marked with $\leftarrow$. In the first row, excluding the first column, there are symbols of the alphabet, $\Sigma$. In the rest of the rows are states (or a set of states) that will be transitioned to on a given input (defined in the first row). You can see an example of it in \ref{table-representation}.
+    Table representation has in the first column all states where initial state is marked with $\rightarrow$ while final states are marked with $\leftarrow$. In the first row, excluding the first column, there are symbols of the alphabet, $\Sigma$. In the rest of the rows are states (or a set of states) that will be transitioned to on a given input (defined in the first row). You can see an example of it in \ref{table-representation}.
 \end{itemize}
 \begin{figure}
 \begin{tikzpicture}
@@ -220,8 +220,8 @@ Finite automata's transition functions $\delta$ are generally represented in the
 \end{tabular}
 \caption{FA table representation}\label{table-representation}
 \end{figure}
-In this thesis we will mostly be working with the representation in form of weighted directed graph as that is what will the user edit in the app.
-This also concludes theory about finite automata and formal languages.
+In this thesis we will mostly be working with the representation in the form of a weighted directed graph as that is what will the users edit in the app.
+This also concludes the theory about finite automata and formal languages.
 
 \section{Machine Learning}
 
@@ -229,7 +229,7 @@ Machine learning does not have an exact definition but e.g. in a book Foundation
 
 \subsection{Classification}
 
-Machine learning, in order to cluster problems that can be solved in a similar way, have defined a few learning scenarios, most notably supervised and unsupervised learning. Learning scenario is a basic description of what type of data we have, how we receive the data and the test data that we use to evaluate the learning algorithm.
+Machine learning, in order to cluster problems that can be solved in a similar way, can be categorized into a few learning scenarios, most notably supervised and unsupervised learning. Learning scenario is a basic description of what type of data we have, how we receive the data and the test data that we use to evaluate the learning algorithm.
 
 \begin{itemize}
     \item \textit{supervised learning}: Our goal is to explain \textit{variable Y} given \textit{independent variables} $\textit{X}_0$, $\textit{X}_1$, ..., $\textit{X}_{\textit{p} - 1}$. We do this by finding a "function" for which most of its examples the following holds:\\
@@ -237,19 +237,18 @@ Machine learning, in order to cluster problems that can be solved in a similar w
     \item \textit{unsupervised learning}: Our goal is to find structures of "similar" data. We do not predict any class and there is no clear way to assess the quality of an unsupervised learning algorithm since it is not clearly defined what the end result should be.
 \end{itemize}
 
-In this thesis we will be only interested in the supervised learning. We can also divide common problems that machine learning is trying to solve by learning tasks - that includes classification, regression, ranking, clustering, etc. Let's look more closely at classification which will be later used in the implementation.
-
+In this thesis we will be only interested in the supervised learning. We can also divide common problems that machine learning is trying to solve by learning tasks - that includes classification, regression, ranking, clustering, etc. Let's look more closely at classification which will be later used in the implementation:
 \begin{itemize}
     \item Classification is a problem of assigning a category to each item.
 \end{itemize}
-It is also a problem solved via supervised learning. To expand on the definition of supervised learning from above, classification is a special case where \textit{Y} has only a few (countable amount) of values. The simplest example of classification is \textit{binary classification}. E.g. we want to predict whether a patient has flu and our data - gender of a patient, person can leave the bed - can be represented in a binary format (yes/no).
+It is also a problem solved via supervised learning. To expand on the definition of supervised learning from above, classification is a special case where \textit{Y} has only a few (countable amount) of values. The simplest example of classification is \textit{binary classification}. E.g. we want to predict whether a patient has flu and our data - gender of a patient, person can leave the bed, etc. - can be represented in a binary format (yes/no).
 
 \chapter{Analysis}
 \label{chap:analysis}
 
 In the analysis I will study the following:
 \begin{itemize}
-    \item existing applications that enable users edit finite automata
+    \item existing applications that enable users edit finite automata, including ALT web interface
     \item ALT itself, focusing on design and drawing of finite automata
     \item possibilites of detection of strokes on touch devices.
 \end{itemize}
@@ -260,22 +259,22 @@ This section will be concerned with the study of existing applications - be it a
 
 \subsection{ALT Web Interface}
 
-ALT web interface has been built as a part of bachelor's thesis made by Michael Vrána \cite{web-alt} leveraging work already done in ALT itself. ALT web interface uses Pipe-and-Filter \cite{pipe-and-filter} architecture to easily combine input and ouputs of the individual algorithms that ALT offers which can be seen in figure \ref{alt-web-interface-screen}. Apart from ALT algorithms it also includes finite automata editor done by Petr Svoboda \cite{state-maker}.
+ALT web interface has been built as a part of a bachelor's thesis made by Michael Vrána \cite{web-alt} leveraging work already done in ALT itself. ALT web interface uses Pipe-and-Filter \cite{pipe-and-filter} architecture to easily combine input and ouputs of the individual algorithms that ALT offers which can be seen in figure \ref{alt-web-interface-screen}. Apart from ALT algorithms it also includes a finite automata editor done by Petr Svoboda \cite{state-maker}.
 
 \begin{figure}
     \includegraphics[width=\textwidth]{alt-web-interface}
     \caption{ALT web interface screenshot}\label{alt-web-interface-screen}
 \end{figure}
 
-This finite automata editor is called Statemaker and you can see a screenshot of how it looks in figure \ref{statemaker-screen}. To summarize its capabilities - users can:
+This finite automata editor is called Statemaker and you can see a screenshot of how it looks in figure \ref{statemaker-screen}. To summarize its capabilities, users can:
 \begin{itemize}
-    \item add states, as well as initial and final states
-    \item add transitions between states
-    \item edit transition string
-    \item mark state as initial or final
-    \item remove states and transitions
-    \item import and export automaton in supported formats
-    \item automatic positioning of transitions and states
+    \item Add states.
+    \item Add transitions between states.
+    \item Edit transition string.
+    \item Mark states as initial or final.
+    \item Remove states and transitions.
+    \item Import and export automaton in supported formats.
+    \item Automatic positioning of transitions and states.
 \end{itemize}
 All of the above features work reliably and are done in intuitive manner - user can quickly understand how to work with all the components. The most notable missing feature is easy simulation of input - this can be done via ALT web interface but if someone is looking for only editing FAs and simulating whether input string is accepted, they have to transition between two interfaces. The benefit is that they can then tap into all the other funcionality that ALT offers. The author of Statemaker has chosen React and Typescript as underlying technologies \cite{state-maker}.
 
@@ -288,11 +287,11 @@ All of the above features work reliably and are done in intuitive manner - user 
 
 As the main goal of this thesis is to write a finite automata editor for iPad, in this part I will study existing applications mainly for touch devices. 
 
-One of such applications is TuringSim \cite{turingsim}. Although, it is not for FAs but for a Turing machine, it also consists of an editor where user can add and edit states and transitions, thus making it similar to a FA editor. You can see its interface in figure \ref{turingsim-screen}. This editors lets users add and edit automaton's states and transitions. Users can also simulate input on the Turing machine's read-and-write tape. Editing of the automaton is done only via tap gestures which is similar to Statemaker with the difference that there are no distinct buttons for those actions. Therefore, it does not fully utilize the potential of touch devices as the UX is very similar to what would one experience on the web. Unfortunately, the app on iPad is broken at the moment as it is missing bottom toolbar for simulating input.
+One of such applications is TuringSim \cite{turingsim}. Although, it is not for FAs but for a Turing machine, it also consists of an editor where user can add and edit states and transitions, thus making it similar to a FA editor. You can see its interface in figure \ref{turingsim-screen}. This editor lets users add and edit automaton's states and transitions. Users can also simulate input on the Turing machine's read-and-write tape. Editing of the automaton is done only via tap gestures which is similar to Statemaker with the difference that there are no distinct buttons for those actions. Therefore, it does not fully utilize the potential of touch devices as the UX is very similar to what would one experience on the web. Unfortunately, the app on iPad is broken at the moment as it is missing a bottom toolbar for simulating input.
 
-There is also app called Finite Automata \cite{finite-automata-app}. In this app user can not edit automata in their weighted graph representation but instead has to use a command line that takes individual command which are described in the app. This app does not utilize touch device features at all.
+Finite Automata \cite{finite-automata-app} is another iPad app. In this app user can not edit automata in their weighted graph representation but instead has to use a command line that takes individual commands which are described in the app. This app does not utilize touch device features at all.
 
-There are also apps available as desktop applications. One is a Finite Automaton Editor by Jaime Rangel-Mondragon that is available as interactive Wolfram notebook \cite{wolfram-editor}. This app allows you to edit the automaton via a transition table and does not allow to simulate any input. There is also Automata Editor by Max Shawabkeh \cite{automata-editor-max}. In this desktop applications users can create and edit their automaton either via a table representation or regular expression. There are also features such as NFA determinization, evaluating automata on strings, and minimizing DFA. Thus it has a powerful feature set but one has to be already familiar with FA theory. It should also be noted that the feature set is a subset of what ALT web interface offers.
+There are also apps available as desktop applications. One is a Finite Automaton Editor by Jaime Rangel-Mondragon that is available as an interactive Wolfram notebook \cite{wolfram-editor}. This app allows you to edit the automaton via a transition table and does not allow to simulate any input. Automata Editor by Max Shawabkeh \cite{automata-editor-max} is another desktop application. In it users can create and edit their automaton either via a table representation or a regular expression. There are also features such as NFA determinization, simulating input, and minimizing DFA. Thus, it has a powerful feature set but one has to be already familiar with the FA theory to be able to utilize it fully. It should also be noted that the feature set is a subset of what the ALT web interface offers.
 
 \begin{figure}
     \includegraphics[width=\textwidth]{turingsim}
@@ -301,32 +300,32 @@ There are also apps available as desktop applications. One is a Finite Automaton
 
 \section{ALT}
 
-Now I will go over ALT and its features that can be leveraged for simulating FA input. The code of ALT is available on GitLab \cite{gitlab} where there are multiple repositories in group Algorithms Library Toolkit (webui-client, infrastructe, etc.) - that includes repository Algorithms Library Toolkit Core \cite{alt-code}, a library written in C++ \cite{c++}. There we can find algorithms that can later be used for FA editor. The code is divided into multiple modules that are then built and linked together using CMake \cite{cmake}. The most important module for this thesis are \textit{alib2data} and \textit{alib2algo} where alib2data contains FA models and alib2algo algorithms for simulating input.
+I will now go over ALT and its features that can be leveraged for simulating FA input. The code of ALT is available on GitLab \cite{gitlab} where there are multiple repositories in the group Algorithms Library Toolkit (webui-client, infrastructe, etc.) - that includes a repository Algorithms Library Toolkit Core \cite{alt-code}, a library written in C++ \cite{c++}. There we can find algorithms that can later be used for a FA editor. The code is divided into multiple modules that are then built and linked together using CMake \cite{cmake}. The most important modules for this thesis are \textit{alib2data} and \textit{alib2algo} where alib2data contains FA models and alib2algo algorithms for simulating input.
 
 \subsection{FA Model}
 
-Multiple FA types are supported by ALT - that includes deterministic and nondeterministic finite automaton as well as nondeterministic finite automaton with $\epsilon-transitions$. There is also extended NFA that has regular expressions as their transitions. These models serve as a definition of an automaton - its states, transitions, etc. To create e.g. NFA with $\epsilon-transitions$ one can use its constructor where it is possible to specify its states and input alphabet. For adding transitions there is a method called \lstinline{addTransition}. Both can be seen in figure \ref{epsilon-nfa-methods}.
+Multiple FA types are supported by ALT - that includes a deterministic and a nondeterministic finite automaton, as well as a nondeterministic finite automaton with $\epsilon$-transitions. There is also extended NFA that has regular expressions as its transitions. These models serve as a description of an automaton - its states, transitions, etc. To create e.g. NFA with $\epsilon$-transitions one can use its constructor where it is possible to specify its states and input alphabet. For adding transitions there is a method called \lstinline{addTransition}. Both can be seen in figure \ref{epsilon-nfa-methods}.
 
 \begin{lstlisting}[language=C++, caption=EpsilonNFA example methods, label=epsilon-nfa-methods]
-    // Creates a new instance of the Automaton
-    // with a concrete initial state.
-    explicit EpsilonNFA ( 
-        ext::set < StateType > states,
-        ext::set < SymbolType > inputAlphabet, 
-        StateType initialState, 
-        ext::set < StateType > finalStates
-    );
-    // Add a transition to the automaton.
-    bool addTransition ( 
-        StateType from,
-        common::symbol_or_epsilon < SymbolType > input,
-        StateType to 
-    );
+// Creates a new instance of the Automaton
+// with a concrete initial state.
+explicit EpsilonNFA ( 
+    ext::set < StateType > states,
+    ext::set < SymbolType > inputAlphabet, 
+    StateType initialState, 
+    ext::set < StateType > finalStates
+);
+// Add a transition to the automaton.
+bool addTransition ( 
+    StateType from,
+    common::symbol_or_epsilon < SymbolType > input,
+    StateType to 
+);
 \end{lstlisting}
 
 \subsection{FA Algorithms}
 
-ALT offers multitude of algorithms that can be run on finite automata - such as minimization, determinization, and simulating input. Simulating input can be found in \lstinline{Accept.h} and \lstinline{Run.h}. Where the former is able to determine whether an input is accepted and the latter does the same but a part of its output is also e.g. in which states did the simulation end in.
+ALT offers multitude of algorithms that can be run on finite automata - such as minimization, determinization, and simulating input. Simulating input can be found in \lstinline{Accept.h} and \lstinline{Run.h} where the former is able to determine whether an input is accepted and the latter does the same but a part of its output also includes in which states did the simulation end in.
 
 \section{Strokes Recognition}
 
@@ -334,23 +333,23 @@ The final prototype will include recognizing automaton elements from drawing. In
 
 \subsection{Google ML Kit}
 
-Google offers a framework called ML Kit that includes what they call "Digital Ink Recognition". This lets you construct a stroke from points drawn on the screen and create \lstinline{Ink} object from those strokes. It also includes base models for recognizing text and even some basic shapes like arrow and rectangle. If you want to create your own model with TensorFlow Lite \cite{tensorflow}, you are forced to use "Image Labeling". Since the editor should support creating cycles, it is necessary to create a custom model because that shape is not supported by any of the base models for Digital Ink Recognition.
+Google offers a framework called ML Kit that includes what they call "Digital Ink Recognition". This lets you construct a stroke from points drawn on the screen and create an \lstinline{Ink} object from those strokes. It also includes base models for recognizing text and even some basic shapes like arrow and rectangle. If you want to create your own model with TensorFlow Lite \cite{tensorflow}, you are forced to use "Image Labeling". Since the editor should support creating cycles, it is necessary to create a custom model because that shape is not supported by any of the base models for Digital Ink Recognition.
 
 \subsection{Core ML}
 
-Apple's CoreML framework supports variety of use cases - analysis of images, processing text, converting audio to text, and identifying sounds in audio \cite{coreml}. It does not, however, support anything like Digital Ink Recognition. For the editor it is suitable to use analysis of images because it is possible to create an image from the screen and pass that to the model. Apple also provides some models already in CoreML format \cite{coreml-models}. Not any of them are applicable for the FA editor's use case. Therefore, a custom model for CoreML would be necessary as well.
+Apple's CoreML framework supports a variety of use cases - analysis of images, processing text, converting audio to text, and identifying sounds in audio \cite{coreml}. It does not, however, support anything like Digital Ink Recognition - but for the editor it is suitable to use analysis of images because it is possible to create an image from the screen and pass that to the model. Apple also provides some models already in CoreML format \cite{coreml-models} but not any of them are applicable for the FA editor's use case. Therefore, a custom model for CoreML would be necessary as well.
 
-Considering that CoreML is bundled in the system and Google ML Kit needs to be installed separately, increasing app's size and incurring maintenance burden, I opted for CoreML. This decision was also made based on the fact that both frameworks do support TensorFlow, although, for CoreML it needs to be first converted to its format.
+Considering that CoreML is bundled in the system and Google ML Kit needs to be installed separately, increasing app's size and incurring maintenance burden, I have opted for CoreML. This decision has also been made based on the fact that both frameworks do support TensorFlow, although, for CoreML it needs to be first converted to its format.
 
 \subsection{Creation of CoreML Model}
 
-There are multiple ways how to create CoreML model, though, they generally fall into two categories:
+There are multiple ways how to create a CoreML model, though, they generally fall into two categories:
 \begin{itemize}
-    \item ML model created by ML libraries that are not from Apple such as TensorFlow or Keras \cite{keras} and then converted with coremltools \cite{coremltools}.
+    \item ML model created by ML libraries that are not from Apple such as TensorFlow or Keras \cite{keras} and then converted with coremltools \cite{coremltools} to the CoreML format.
     \item ML model created by framework or application that outputs CoreML directly.
 \end{itemize}
 
-For creating CoreML models directly there is either Create ML \cite{create-ml} or turicreate \cite{turicreate}. Create ML, at the time of writing, supports only image classification, whereas turicreate has built-in support for drawing classification. Although, both image classification and drawing classification operate on images, the important distinction is that drawing classification 28x28 grayscale bitmap as input. The drawing classification is also tailored for inputs created by Apple Pencil \cite{drawing-classification}, thus I have chosen to use it instead of libraries such as TensorFlow. It should be noted, though, that turicreate leverages TensorFlow as a lower-level framework and it should serve to streamline development of CoreML models.
+For creating CoreML models directly there is either Create ML \cite{create-ml} or turicreate \cite{turicreate}. Create ML, at the time of writing, supports only image classification, whereas turicreate has a built-in support for drawing classification. Although, both image classification and drawing classification operate on images, the important distinction is that drawing classification takes 28x28 grayscale bitmap as input. The drawing classification is also tailored for inputs created by Apple Pencil \cite{drawing-classification}, thus I have chosen to use it instead of libraries such as TensorFlow. It should be noted, though, that turicreate leverages TensorFlow as a lower-level framework and it should serve to streamline development of CoreML models.
 
 \chapter{Automata Editor Design}
 \label{chap:design}
@@ -358,7 +357,7 @@ For creating CoreML models directly there is either Create ML \cite{create-ml} o
 In this chapter I will go over some decisions made, such as which technology I have decided to use, and over the design of the editor - how the app will look and how users will interact with the editor.
 
 \section{Touch Device}
-The main reason why this prototype is meant for a touch device is to simulate as much as possible the experience of drawing FAs on a paper. There were three main options that were possible:
+The main reason why this prototype is meant for a touch device is to simulate as much as possible the experience of drawing FAs on a regular paper. There were three main options that were possible:
 \begin{itemize}
     \item create touch-friendly web interface
     \item implement app for Android
@@ -368,32 +367,32 @@ Creating a touch-friendly web interface would have the benefit of being universa
 
 \section{Used Technologies}
 
-I will now cover what technologies are used in the app and why I have chosen them. A lot of decisions have been influenced by focusing on iPad, and even more specifically, usage of the app on iPad along with Apple Pencil. 
+I will now cover which technologies are used in the app and why I have chosen them. A lot of decisions have been influenced by focusing on iPad and, even more specifically, by targeting iPad devices along with Apple Pencil. 
 
 \subsection{Language}
 
-Choosing a language in which one will write the application is an important first step. For iOS applications I could have used:
+Choosing a language in which one will write the application is an important first step. For iOS applications I could have generally used:
 \begin{itemize}
     \item Objective-C
     \item Swift
     \item cross-platform framework
 \end{itemize}
 
-Objective-C was designed by Brad J. Cox at the start of 1980s and was then licensed by NeXT Software in 1988. Then in 1996 NeXT Software was acquired by Apple - along with Objective-C. Apple have then chosen Objective-C as a main language for OS X and in 2007 for the new operating system iOS \cite{objective-c-programming}. On the Apple developer website it is described as "superset of the C programming language and provides object-oriented capabilities and a dynamic runtime" \cite{objective-c}. Objective-C has been thus the main programming language for years. Nowadays, Objective-C is not anymore that popular and ranks at the 23rd place as per TIOBE index \cite{tiobe-index}. Apple has rather shifted their focus to Swift and some of the new frameworks, like SwiftUI \cite{swiftui}, are only available in Swift. Swift is thus a much better option to choose if one is starting a new iOS app.
+Objective-C was designed by Brad J. Cox at the start of 1980s and was then licensed by NeXT Software in 1988. Then in 1996 NeXT Software was acquired by Apple - along with Objective-C. Apple have then chosen Objective-C as a main language for OS X and in 2007 for the new operating system iOS \cite{objective-c-programming}. On the Apple developer website it is described as "superset of the C programming language and provides object-oriented capabilities and a dynamic runtime" \cite{objective-c}. Objective-C has been thus the main programming language for years. Nowadays, Objective-C is not anymore that popular and ranks at the 23rd place as per TIOBE index \cite{tiobe-index}. Apple has rather shifted their focus to Swift and some of the new frameworks, like SwiftUI \cite{swiftui}, are only available in Swift. Swift makes for a much better option if one is starting a new iOS app.
 
 Using a cross-platform framework - such as React Native \cite{react-native} or Flutter \cite{flutter} - was also a possibility. But to leverage Apple Pencil fully it was necessary to use PencilKit \cite{pencilkit} and for this one would have to write native code. Therefore, I have decided to use Swift as the main language.
 
 \subsection{UI Framework}
 
-At the time of writing it is possible to use two UI frameworks offered by Apple to write UI code. Those are UIKit \cite{uikit} or, already mentioned, SwiftUI \cite{swiftui}. SwiftUI is a newer framework than UIKit, release in 2019 \cite{swiftui-release}. In Thinking in SwiftUI book it is described as a "radical departure from UIKit, AppKit, and other object-oriented UI frameworks" \cite{thinking-in-swiftui}. SwiftUI offers a more declarative approach, quite similar to React \cite{react} used in the web development. Declarative UIs have the benefits of less code since it enables the framework to do more on behalf of the developers. This comes at a cost of lesser control. Getting back to SwiftUI, specifically, one of its major drawbacks is that not all components, that are written in UIKit, are available in SwiftUI. But there is very strong support for SwiftUI-UIKit interoperability \cite{swiftui-interop} and thus it is always possible to use UIKit when necessary. The fact that SwiftUI offers faster development due to its declarative nature and also SwiftUI previews \cite{swiftui-preview} has made it a better candidate than UIKit, especially for a prototype. Therefore, I decided to use SwiftUI as the main UI framework.
+At the time of writing it is possible to use two UI frameworks offered by Apple to write UI code. Those are UIKit \cite{uikit} or, already mentioned, SwiftUI \cite{swiftui}. SwiftUI is a newer framework than UIKit, released in 2019 \cite{swiftui-release}. In Thinking in SwiftUI book it is described as a "radical departure from UIKit, AppKit, and other object-oriented UI frameworks" \cite{thinking-in-swiftui}. SwiftUI offers a more declarative approach, quite similar to React \cite{react} used in the web development. Declarative UIs have the benefit of less code since it enables the framework to do more on behalf of the developer. This comes at a cost of lesser control. Getting back to SwiftUI, specifically, one of its major drawbacks is that not all components, that are written in UIKit, are available in SwiftUI. But there is very strong support for SwiftUI-UIKit interoperability \cite{swiftui-interop} and thus it is always possible to use UIKit when necessary. The fact that SwiftUI offers faster development due to its declarative nature and SwiftUI previews \cite{swiftui-preview} has made it a better candidate than UIKit, especially for a prototype. Therefore, I have decided to use SwiftUI as the main UI framework.
 
 \subsection{Architecture}
 
-There is no recommended architecture by Apple for apps written on top of SwiftUI frameworks. It is also entirely possible to create an app without adhering to any architecture. This code, though, is more difficult to maintain for a longer period.
+There is no recommended architecture by Apple for apps written on top of SwiftUI frameworks. It is also entirely possible to create an app without adhering to any architecture. This code, though, is then more difficult to maintain for a longer period.
 
-One possible architecture is MVVM \cite{mvvm}. Diagram of this architecture can be seen in figure \ref{mvvm}. It enables developers to have a clear boundary between UI code and business logic and is a good option for either UIKit or SwiftUI applications. One of its drawbacks is that it can sometimes lead to imperative code where developers call a function and act based on its inputs. The alternative are (among others) architectures inspired by Redux. Diagram of Redux is depicted in figure \ref{redux}. The main difference between Redux and MVVM is that MVVM is event-driven whereas Redux is data-driven. Data-driven approach is much more closer to declarative programming since the state of the application describes how it should look. Thus I have decided that Redux-like architecture will be a better option.
+One possible architecture is MVVM \cite{mvvm}. Diagram of this architecture can be seen in figure \ref{mvvm}. It enables developers to have a clear boundary between UI code and business logic and is a good option for either UIKit or SwiftUI applications. One of its drawbacks is that it can sometimes lead to imperative code where developers call a function and act based on its inputs. The alternative are (among others) architectures inspired by Redux. Diagram of Redux is depicted in figure \ref{redux}. The main difference between Redux and MVVM is that MVVM is event-driven, whereas Redux is data-driven. Data-driven approach is much more closer to declarative programming since the state of the application describes how it should look. Thus I have decided that Redux-like architecture will be a better option.
 
-One of concrete implementations of Redux architecture is the Composable Architecture by Point-Free \cite{tca}. This architecture is based on Redux but it has some modifications such as handling of side effects. It also makes testing more exhaustive by asserting that no action that you do not expect is run as well as that the state is not changed in any other way than you describe in your test. Considering all of the points given, I have chosen to use the Composable Architecture. 
+One of concrete implementations of Redux architecture is the Composable Architecture by Point-Free \cite{tca}. This architecture is based on Redux but it has some modifications such as handling of side effects. It also makes testing more exhaustive by asserting that no action that you do not expect is run, as well as that the state is not changed in any other way than you describe in your test. Considering all of the above, I have chosen to use the Composable Architecture. 
 
 \begin{figure}
     \includegraphics[width=\textwidth]{mvvm}
@@ -407,11 +406,11 @@ One of concrete implementations of Redux architecture is the Composable Architec
 
 \section{ALT Integration}
 
-I have already talked about ALT in chapter \ref{chap:analysis}. I have not discussed there, however, how ALT will be integrated in the application. That is now possible as I have stated that the app will be written in Swift. As already mentioned, ALT is a library written in C++. There exists a Swift-C++ interoperability manifesto \cite{swift-c++-manifesto}. This manifesto goes over what it would take to make C++ and Swift interoperable but not even all functionalities of C++ have their discussions of how they could be ported to Swift. However, there is a well-supported interoperability between Swift and Objective-C \cite{swift-objc-interoperability}. For Objective-C and C++ interoperability there is a language iteration of Objective-C called Objective-C++. It is even e.g. possible to "include pointers to Objective-C objects as data members of C++ classes" \cite{objc++}. I first tried to integrate ALT directly and compile it right via Xcode but due to the fact that ALT is built via CMake \cite{cmake} and does not have a simple setup, I then resorted to pre-building and then bundle the already built frameworks in the application. I will go over the details in chapter \ref{chap:implementation}.
+I have already talked about ALT in chapter \ref{chap:analysis}. I have not discussed there, however, how ALT will be integrated in the application. That is now possible as I have stated that the app will be written in Swift. As already mentioned, ALT is a library written in C++. There exists a Swift-C++ interoperability manifesto \cite{swift-c++-manifesto} but this manifesto only goes over what it would take to make C++ and Swift interoperable but not even all functionalities of C++ have their discussions of how they could be ported to Swift. However, there is a well-supported interoperability between Swift and Objective-C \cite{swift-objc-interoperability}. For Objective-C and C++ interoperability there is a language iteration of Objective-C called Objective-C++. It is even e.g. possible to "include pointers to Objective-C objects as data members of C++ classes" \cite{objc++}. I first tried to integrate ALT directly and compile it right via Xcode but due to the fact that ALT is built via CMake \cite{cmake} and does not have a simple setup, I then resorted to pre-building the necessary modules and then bundling them in the application. I will go over the details in chapter \ref{chap:implementation}.
 
 \section{User Interface}
 
-As a final section of this chapter I will go over the design of UI. The design has been heavily influenced by the fact that one of the main goals was to imitate the experience of drawing FAs on a piece of paper. The app should let users to:
+As a final section of this chapter I will discuss the design of the UI. The design has been heavily influenced by the fact that one of the main goals was to imitate the experience of drawing FAs on a piece of a regular paper. The app should let users to:
 \begin{itemize}
     \item create FA states, transitions, and cycles
     \item delete and rearrange all of the above
@@ -422,7 +421,7 @@ As a final section of this chapter I will go over the design of UI. The design h
 
 \subsection{Canvas}
 
-Canvas is the most important part of the editor since it is the space where user can draw FA elements. After each individual stroke, a function will be run that will evaluate the stroke to determine which FA state the user has drawn. The flow of recognizing the FA elements is graphically represented in figure \ref{app-flow}. The app first waits for the user to make a stroke, after a stroke is made its representation is sent to the ML model which recognizes the type of FA element, a state is updated with the new element and it is drawn on the canvas. Then the app again waits for another stroke.
+Canvas is the most important part of the editor since it is the space where users can draw FA elements. After each individual stroke, a function will be run that will evaluate the stroke to determine which FA state the user has drawn. The flow of recognizing the FA elements is graphically represented in figure \ref{app-flow}. The app first waits for the user to make a stroke, after a stroke is made its representation is sent to the ML model which recognizes the type of FA element, a state is updated with the new element and it is drawn on the canvas. Then the app again waits for another stroke.
 
 \begin{figure}
     \includegraphics[width=\textwidth]{app-flow}
@@ -431,7 +430,7 @@ Canvas is the most important part of the editor since it is the space where user
 
 \subsection{State}
 
-The app needs to be able to work with three FA elements - state, transitions and a cycle (a special case of transition that starts and ends in the same state). These elements should be represented the same way as they are in the weighted directed graph representation. That means a state will be rendered as a circle. But it is necessary to also enable user to edit the name of the state. Thus, a text field in the center of the state will be shown. You can see example of a stroke that should be rendered as a state and how it looks like after being recognized in figure \ref{state}. Notice also a button at the top of the circle - this button is for dragging the state. To indicate that the state is final, user should be able to draw another circle where the stroke contains the center of the state that should be final. In figure \ref{final-state} you should see examples of strokes that should be then rendered as a final state.
+The app needs to be able to work with three FA elements - state, transitions and a cycle (a special case of transition that starts and ends in the same state). These elements should be represented the same way as they are in the weighted directed graph representation. That means a state will be rendered as a circle. But it is necessary to also enable user to edit the name of the state. Thus, a text field in the center of the state will be shown. You can see example of a stroke that should be rendered as a state and how it looks like after being recognized in figure \ref{state}. Notice also a button at the top of the circle - this button is for dragging the state. To indicate that the state is final, users should be able to draw another circle where the stroke contains the center of the state that should be final. In figure \ref{final-state} you should see examples of strokes that should be then rendered as a final state.
 
 \begin{figure}
     \centering
@@ -451,7 +450,7 @@ The app needs to be able to work with three FA elements - state, transitions and
 
 \subsection{Transition}
 
-A transition is represented as a directed edge between vertices which is a shape of an arrow. The stroke can either be as an arrow or, more conveniently, just a straight line which is faster and easier to draw, especially when the shape must be drawn with a single stroke. Example strokes and a rendered transition are in figure \ref{transition}. Note that the transition can be drawn in no matter which direction. The transition has also a text field positioned above its middle point. Apart from this text field where users can write symbols that the transition should occur on there is also a button with a plus icon. This button allows users to add multiple symbols to a single transition. Leveraging a delimiter, such as comma, was also considered but that could inhibit discoverability. Users can easily remove the transition symbols by tapping a cross symbol beside the symbol. To enable drawing FA with $\epsilon-transitions$ there is also a button with $\epsilon$. When it is tapped, it is added as another symbol for that particulat transitions. A transition with multiple symbols and with $\epsilon-transition$ are in figure \ref{transition-symbols}. Similar to a state there is a drag button to drag the middle point of a transition. This is especially useful when having multiple states on the same horizontal line with a transition going from the leftmost to the rightmost state.
+A transition is represented as a directed edge between vertices which has a shape of an arrow. The stroke can either be as an arrow or, more conveniently, just a straight line which is faster and easier to draw, especially when the shape must be drawn with a single stroke. Example strokes and a rendered transition are in figure \ref{transition}. Note that the transition can be drawn in no matter which direction. The transition has also a text field positioned above its middle point. Apart from this text field where users can write symbols that the transition should occur on, there is also a button with a plus icon. This button allows users to add multiple symbols to a single transition. Leveraging a delimiter, such as comma, was also considered but that could inhibit discoverability. Users can easily remove the transition symbols by tapping a cross symbol beside the symbol. To enable drawing a FA with $\epsilon$-transitions there is also a button with $\epsilon$. When it is tapped, $\epsilon$ is added as another symbol for that particular transition. A transition with multiple symbols and with an $\epsilon$-transition are in figure \ref{transition-symbols}. Similar to a state there is a drag button to drag the middle point of a transition. This is especially useful when having multiple states on the same horizontal line with a transition going from the leftmost to the rightmost state.
 
 \begin{figure}
     \centering
@@ -465,13 +464,13 @@ A transition is represented as a directed edge between vertices which is a shape
 \begin{figure}
     \centering
     \subfigure[Transition with multiple symbols]{\includegraphics[width=0.4\textwidth]{transition-multiple}}
-    \subfigure[$\epsilon-transition$]{\includegraphics[width=0.4\textwidth]{transition-epsilon}}
+    \subfigure[$\epsilon$-transition]{\includegraphics[width=0.4\textwidth]{transition-epsilon}}
     \caption{Transitions with symbols}\label{transition-symbols}
 \end{figure}
 
 \subsection{Cycle}
 
-Cycle must be handled differently than a normal transition due to its  shape - that means that it must be recognized as a different class in ML model. The business logic tied to a cycle will not be the same, too. Alike a regular transition, it can be drawn in whichever orientation. The ML model should also support multiple variants of a cycle shape to accomodate most of the cycle strokes drawn by users. It should, however, have the same text field, button for $\epsilon-transition$, as well as multiple transition symbols as a regular transition. The possible strokes and how the cycle should then look like are in figure \ref{cycle}.
+A cycle must be handled differently than a normal transition due to its shape - that means that it must be recognized as a different class in ML model. The business logic tied to a cycle will not be the same, too. Alike a regular transition, it can be drawn in whichever orientation. The ML model should also support multiple variants of a cycle shape to accomodate most of the cycle strokes drawn by users. It should, however, have the same text field, button for $\epsilon$-transition, as well as multiple transition symbols as a regular transition. The possible strokes and how the cycle should then look like are in figure \ref{cycle}.
 
 \begin{figure}
     \centering
@@ -491,11 +490,11 @@ So far, I have only described how transitions and states will be recognized in i
     \item without an end state
     \item with both start and end states
 \end{itemize}
-For transitions that do not have states on both sides it must be possible to connect a new state to their end. E.g. if user draws a state close to a transition's end and it has no state there, it should connect it and make the transition an incoming edge of that state. Note that if user draws a transition without a start state, it is a valid transition as it will be interpreted as the marking of an initial state.
+For transitions that do not have states on both sides it must be possible to connect a new state to their end. E.g. if a user draws a state close to a transition's end and it has no state there, it should connect it and make the transition an incoming edge of that state. Note that if the user draws a transition without a start state, it is a valid transition as it will be interpreted as the marking of an initial state.
 
 \subsection{Simulating Input}
 
-The only missing functionality that I have not yet touched upon is simulating input. Considering that a FA is drawn, user should be able to write their desired input into a text field and see whether the input string has or has not been accepted. That can be done via tapping a button with a title "Simulate". If FA accepts the input, the output is denoted with a checkmark emoji (\ref{simulate-accept}) and if not, it is denoted with cross emoji (\ref{simulate-reject}). For convenience there is a button to erase the last character.
+The only missing functionality that I have not yet touched upon is simulating input. Considering that a FA is drawn, the user should be able to write their desired input into a text field and see whether the input string has or has not been accepted. That can be done via tapping a button with a title "Simulate". If the FA accepts the input, the output is denoted with a checkmark emoji (\ref{simulate-accept}) and if not, it is denoted with cross emoji (\ref{simulate-reject}). For convenience there is a button to erase the last character.
 
 \begin{figure}
     \includegraphics[width=\textwidth]{simulate-accept}
@@ -519,30 +518,30 @@ One thing I have purposefully omitted is how the user will interact with the app
     \item via Scribble feature
 \end{itemize}
 
-Using keyboard is the standard way of input for text fields. But this breaks the flow of using the Apple Pencil and does not fulfill the goal of immitating real life experience. Fortunately, from iOS 14 it is possible to use Apple Pencil for writing in text fields \cite{scribble}. This means that it was not necessary to use a custom ML model in order to achieve the same effect. It does have a drawback and that is the Scribble feature is only available from iOS 14.0 and only if the device's language is in English or Traditional and Simplified Chinese. For other scenarios, users can use a keyboard as a fallback.
+Using keyboard is the standard way of input for text fields. But this breaks the flow of using the Apple Pencil and does not fulfill the goal of immitating real life experience. However, from iOS 14 it is possible to use Apple Pencil for writing in text fields directly \cite{scribble}. This means that it was not necessary to use a custom ML model in order to achieve the same effect. It does have a drawback and that is the Scribble feature is only available from iOS 14.0 and only if the device's language is in English or Traditional and Simplified Chinese. For other scenarios, users can use a keyboard as a fallback.
 
 \subsection{Document Based Apps}
 
-Users should also be able to save their automata and even share them with other people. For this I have leveraged the benefits of the Composable Architecture and saved the whole state of editor to JSON. Then this JSON could be saved as a document in what Apple calls document based apps \cite{document-based}. In document based apps it is also possible to save changes done by the user as they happen, ensuring no progress is ever lost.
+Users should also be able to save their automata and even share them with other people. The state of the editor should be saved in a document and can be interacted with in what Apple calls document based apps \cite{document-based}. In document based apps it is also possible to save changes done by the user as they happen, ensuring no progress is ever lost.
 
 \chapter{Implementation}
 \label{chap:implementation}
 
-I have laid out a basic overview of how the app is designed to look and work. In this chapter I shall go into details of how the most important parts of the app have been implemented.
+I have laid out a basic overview of how the app is designed to look and work. In this chapter I shall go into details of how the most important parts of the app have been implemented. You can also see the source code either in the attached SD card or in the \href{project's repository}{https://github.com/fortmarek/automata-editor}.
 
 \section{ML Model}
 
-ML model for recognizing FA elements is a core part of the app. I will go over how it has been implemented and integrated.
+A ML model for recognizing FA elements is a core part of the app. I will go over how it has been implemented and integrated.
 
 \subsection{Creating ML Model}
 
-For creating a ML model I have chosen to use turicreate \cite{turicreate} as discussed in chapter \ref{chap:analysis}. The user guide \cite{drawing-classification} describes how to create a ML model for drawing classification using QuickDraw dataset \cite{quickdraw}. This dataset has millions of drawings of various objects, shapes. The shapes do not include, however, arrow and what would resemble a cycle. Therefore, I had to create a custom dataset. To make the ML model as accurate as possible I used the same input method for creating the dataset as will be used for drawing the elements in the prototype. For this I created an MNIST Maker app \cite{mnist-maker}. This app lets you to draw shapes with either a finger or Apple Pencil, scales it down to the desired size (I have used 28x28), and converts it to grayscale to make the image as small as possible and it is also what is used when creating the ML Model.
+For creating a ML model I have chosen to use turicreate \cite{turicreate} as discussed in chapter \ref{chap:analysis}. The user guide \cite{drawing-classification} describes how to create a ML model for drawing classification using QuickDraw dataset \cite{quickdraw}. This dataset has millions of drawings of various objects, shapes. The shapes do not include, however, arrow and what would resemble a cycle. Therefore, I had to create a custom dataset. To make the ML model as accurate as possible, I have used the same input method for creating the dataset as will be used for drawing the elements in the prototype. For this I have created an MNIST Maker app \cite{mnist-maker}. This app lets you to draw shapes with either a finger or Apple Pencil, scales it down to the desired size (I have used 28x28), and converts it to grayscale to make the image as small as possible and it is also what is used when creating the ML Model.
 
-Once I have created a dataset, I could train the ML model. I have used the guide from turicreate and made some modifications like working with grayscale images exclusively (originally, the guide works with RGB images) and specifying which classes to work with. To make iterating on the model easy and quick I have used a Jupyter notebook \cite{jupyter}. The final Jupyter notebook with the data used is \href{https://github.com/fortmarek/automata-editor-model/}{available on Github}. Once an ML model is trained, one can use turicreate's visualization to see how the ML model worked on the test dataset. In figure \ref{turicreate-visualization} you can see the visualization. From the results it can be seen that the model did not make a mistake in recognizing an arrow but it had mistaken a cycle for a circle and vice versa. This is due to the fact that circle and cycle do have a similar shape.
+Once I have created a dataset, I could train the ML model. I have used the guide from turicreate and made some modifications like working with grayscale images exclusively (originally, the guide works with RGB images) and specifying which classes to work with. To make iterating on the model easy and quick, I have used a Jupyter notebook \cite{jupyter}. The final Jupyter notebook with the data used is \href{https://github.com/fortmarek/automata-editor-model/}{available on Github}. Once a ML model is trained, one can use turicreate's visualization to see how the ML model worked on the test dataset. In figure \ref{turicreate-visualization} you can see the visualization. From the results it can be seen that the model did not make a mistake in recognizing an arrow but it had mistaken a cycle for a circle and vice versa. This is due to the fact that circles and cycles do have a similar shape.
 
-The final product, once all the commands in the Jupyter notebook are run, is a file \textit{AutomataClassifier.mlmodel}. The extension hints at the fact that it is a ML model that can be used by CoreML framework.
+The final product, once all the commands in the Jupyter notebook are run, is a file \textit{AutomataClassifier.mlmodel}. The extension hints at the fact that it is a ML model that can be used by the CoreML framework.
 
-\subsection{Integration of ML Model}
+\subsection{Integration of the ML Model}
 
 To integrate the ML model one has to simply drag and drop the file into Xcode \cite{xcode}, Apple's IDE, to create a reference in the project file. This will automatically bundle the model with the app and synthesize Swift code that can be later leveraged to interact with the model. The code for recognizing a stroke is located in \lstinline{AutomataClassifierService} and the main logic is in a code snippet \ref{automata-classifier}.
 
@@ -584,11 +583,11 @@ Before FA elements can be recognized, they also must be drawn by the user, conve
 
 \subsection{Canvas}
 
-To enable drawing with Apple Pencil Apple offers PencilKit \cite{pencilkit}. One of the components this framework defines is a \lstinline{PKCanvasView} - in the documentation described as a "view that captures Apple Pencil input and displays the rendered results in an iOS app" \cite{pkcanvasview}. To use it in SwiftUI \lstinline{View} I had to wrap it into a view I called \lstinline{CanvasView} conforming to \lstinline{UIViewRepresentable} since \lstinline{PKCanvasView} is only available in UIKit. Instance of \lstinline{CanvasView} was then added to \lstinline{EditorView} that is the main view of the app.
+To enable drawing with the Apple Pencil, Apple offers PencilKit \cite{pencilkit}. One of the components this framework defines is \lstinline{PKCanvasView} - in the documentation described as a "view that captures Apple Pencil input and displays the rendered results in an iOS app" \cite{pkcanvasview}. To use it in SwiftUI, \lstinline{View} I had to wrap it into a view I called \lstinline{CanvasView} conforming to \lstinline{UIViewRepresentable} since \lstinline{PKCanvasView} is only available in UIKit. Instance of \lstinline{CanvasView} was then added to \lstinline{EditorView} that is the main view of the app.
 
 \subsection{Strokes}
 
-When drawing in \lstinline{PKCanvasView} the individual strokes are represented with \lstinline{PKStroke}. It contains all of the available information about the given stroke - such as its bounds, type of ink (\lstinline{PKInt}), and path (\lstinline{PKStrokePath}). In order not to use PencilKit directly and also to make it easier to work with, I wrapped \lstinline{PKStroke} into a custom model \lstinline{Stroke} that contains control points (array of \lstinline{CGPoint}) of \lstinline{PKStroke}. That is because \lstinline{PKStrokePath} contains infinite amount of points. To get only a subset of them one can use a method \lstinline{interpolatedPoints(by: CGFloat)}. The most recent \lstinline{PKStroke} is passed to \lstinline{AutomataClassifierService} and from which an image is created as can be seen in \ref{strokes-conversion} where \lstinline{modelImage()} method simply converts the image from \lstinline{PKDrawing} to grayscale and a desired size.
+When drawing in \lstinline{PKCanvasView} the individual strokes are represented with \lstinline{PKStroke}. It contains all of the available information about the given stroke - such as its bounds, type of ink (\lstinline{PKInt}), and path (\lstinline{PKStrokePath}). In order not to use PencilKit directly and also to make it easier to work with, I wrapped \lstinline{PKStroke} into a custom model \lstinline{Stroke} that contains control points (array of \lstinline{CGPoint}) of \lstinline{PKStroke}. I have not used \lstinline{PKStrokePath} because it contains infinite amount of points. To get only a subset of them one can use a method \lstinline{interpolatedPoints(by: CGFloat)}. The most recent \lstinline{PKStroke} is passed to \lstinline{AutomataClassifierService} and from which an image is created as can be seen in \ref{strokes-conversion} where \lstinline{modelImage()} method simply converts the image from \lstinline{PKDrawing} to grayscale and the desired size.
 
 \begin{lstlisting}[caption=Automata classifier, label=strokes-conversion]
 let image = PKDrawing(strokes: [stroke.pkStroke()])
@@ -603,7 +602,7 @@ let image = PKDrawing(strokes: [stroke.pkStroke()])
 
 If the ML classifier makes a prediction that the stroke being analyzed is a state, it is necessary to draw it more precisely than a user. State is represented as a circle, so to draw it the app needs to know its center and radius. To obtain a center I make an average of all the points available. Once the center is computed, radius is then calculated as an average of distances of all the points from the center. A new stroke can then be created as shown in \ref{circle-init}.
 
-It is also necessary to connect a state to an existing transition. There is a method for this called \lstinline{closestTransitionWithoutEndState} that, as the name suggests, finds the closest transition that does not have an end state. If such a transition exists, a center is moved in the direction of the tip of the transition, so they an intersection point.
+It is also necessary to connect a state to an existing transition. There is a method for this called \lstinline{closestTransitionWithoutEndState} that, as the name suggests, finds the closest transition that does not have an end state. If such a transition exists, a center is moved in the direction of the tip of the transition, so they have a single intersection point.
 
 A final state is marked with a double circle. Therefore, if a stroke is a state, before making a new one I check whether a center of a different state is contained in a frame of the new state. If it is so, then the state is marked as final and a new circle around the previous one is made and the state is denoted in the internal state as a final one.
 
@@ -627,7 +626,7 @@ extension Array where Element == CGPoint {
 
 \subsection{Transition}
 
-To draw a transition I take its first and last point (tip point). At the tip point two additional lines must be made, so the final shape looks like an arrow. For this I needed vectors, so it works for whichever orientation. Vectors are not offered by any of the bundled frameworks, so I heavily inspired my implementation from a repository called VectorMath \cite{vectormath}. Once vectors were available, I was able to compute a perpendicular vector to the line from the start point to the tip point that has one common point with that line and that is a point on the transition's line in a pre-defined distance from the tip point. The bottom and top point are then on that vector with a pre-defined distance from the line as well. To add additional points top and bottom vectors are created by connecting top and bottom points with the tip point as in \ref{transition-points}.
+To draw a transition I take its first and last point (tip point). At the tip point two additional lines must be made, so the final shape looks like an arrow. For this I needed vectors, so it works for whichever orientation. Vectors are not offered by any of the bundled frameworks, so I have heavily inspired my implementation from a repository called VectorMath \cite{vectormath}. Once vectors were available, I was able to compute a perpendicular vector to the line from the start point to the tip point that has one common point with that line and that is a point on the transition's line in a pre-defined distance from the tip point. The bottom and top points are then on that vector with a pre-defined distance from the line as well. To add additional points, top and bottom vectors are created by connecting top and bottom points with the tip point as in \ref{transition-points}.
 
 Similarly to states, it is necessary to handle the case when a new transition should be connected to an existing state. Firstly, the closest states to the start point and to the tip point are computed. Then the closer one is chosen as a start state or end state, respectively - if the distance is smaller than a given threshold.
 
@@ -652,7 +651,7 @@ let bottomVector = Vector(tipPoint, bottomPoint)
 
 \subsection{Cycle}
 
-The last class that the ML model recognized and that has not been discussed how to draw is a cycle. A cycle is different from a state and a transition since it can not exist without being connected to a state. If there is no state to connect it to, the stroke is just erased. Otherwise, once the closest state is, the cycle's shape can be created. Its shape is more complicated than the previous - but it is possible to use PencilKit's behavior that smoothes out a curve based on the points given. Thus, to recreate it I use the point at the intersection with the state and the state's center in \ref{cycle-init}.
+The last class that the ML model classifies and that has not been discussed how to draw is a cycle. A cycle is different from a state and a transition since it can not exist without being connected to a state. If there is no state to connect it to, the stroke is just erased. Otherwise, once the closest state is found the cycle's shape can be created. Its shape is more complicated than the previous - but it is possible to use PencilKit's behavior that smoothes out a curve based on the points given. Thus, to recreate it I used the point at the intersection with the state and the state's center in \ref{cycle-init}.
 
 \begin{lstlisting}[caption=Cycle stroke, label=cycle-init]
 extension Array where Element == CGPoint {
@@ -695,14 +694,14 @@ extension Array where Element == CGPoint {
 ALT integration has been discussed both in chapter \ref{chap:analysis} and chapter \ref{chap:design}. 
 
 \subsection{Source Code}
-In chapter \ref{chap:design} I have already hinted that I first attempted to integrate the source code directly. Swift Package Manager is a package manager by Apple that is integrated right in Xcode \cite{spm}. Therefore, if I was able to use that for building ALT, others could benefit from this as well as it would make the integration seamless. To create a package via Swift Package Manager one must create \lstinline{Package.swift} manifest where the products and other targets are defined. It is also possible to define C++ headers and flags. But the headers in ALT source code point to already built modules by CMake. This means that when I tried to build the code, I got compiler errors about \lstinline{#include} directive pointing to non-existent headers. This was possible to circumvent by modifying \lstinline{#include} directives to point to existing locations, instead of pointing to the built modules. But doing so would be a maintenance burden. Thus, I have decided not to integrate the source code directly but rather only frameworks built with CMake.
+In chapter \ref{chap:design} I have already hinted that I had first attempted to integrate the source code directly. Swift Package Manager is a package manager by Apple that is integrated right in Xcode \cite{spm}. Therefore, if I was able to use that for building ALT, others could benefit from this and it would make the integration seamless. To create a package via Swift Package Manager one must create \lstinline{Package.swift} manifest where the products and other targets are defined. It is also possible to define C++ headers and flags. But the headers in the ALT source code point to already built modules by CMake. This means that when I tried to build the code, I got compiler errors about \lstinline{#include} directive pointing to non-existent headers. This was possible to circumvent by modifying \lstinline{#include} directives to point to existing locations, instead of pointing to the built modules. But doing so would be a maintenance burden. Thus, I have decided not to integrate the source code directly but rather only frameworks built with CMake.
 
 \subsection{Headers}
-ALT's current version only supports \lstinline{gcc} compiler. But to build frameworks for iOS it is necessary to use clang \cite{clang}. At the time of writing ALT is not compilable with the standard library in clang since ALT uses some C++20 features that are only implemented in gcc - for example \lstinline{lexicographical_compare_three_way}, among others. It is possible to point clang to headers from gcc via \lstinline{-cxx-isystem} flag and \lstinline{-stdlib=libstdc++} that tells clang to parse the headers as \lstinline{libstdc++} instead of \lstinline{libc++}. But this is not possible to do since Xcode 10 has dropped support for \lstinline{libstdc++} and all C++ projects must use \lstinline{libc++} standard library. In the future it should be feasible to use the current version of ALT with some newer version of clang as they add support for C++20 features. ALT has only recently started using C++20 features, so in order to fix this issue a new branch \lstinline{libc++-17} was created by Jan Trávníček from a commit from before C++20 features have been introduced.
+ALT's current version only supports \lstinline{gcc} compiler. But to build frameworks for iOS it is necessary to use clang \cite{clang}. At the time of writing ALT is not compilable with the standard library in clang since ALT uses some C++20 features that are only implemented in gcc - for example \lstinline{lexicographical_compare_three_way}, among others. It is possible to point clang to headers from gcc via \lstinline{-cxx-isystem} flag and \lstinline{-stdlib=libstdc++} that tells clang to parse the headers as \lstinline{libstdc++} instead of \lstinline{libc++}. But this is not possible to do since Xcode 10 has dropped support for \lstinline{libstdc++} and all C++ projects must use \lstinline{libc++} standard library. In the future it should be feasible to use the current version of ALT with some newer version of clang as they add support for C++20 features. ALT has only recently started using C++20 features, so in order to fix this issue a new branch \lstinline{libc++-17} was created by Jan Trávníček from a commit from before C++20 features have been introduced to the codebase.
 
 \subsection{CMake}
 
-There is support for building for iOS platform in CMake directly. To save some upfront work I used ios-cmake toolchain file that builds on top of CMake and makes the setup easier \cite{ios-cmake}. An example of how to build a framework for \lstinline{OS64} (iOS) is in \ref{cmake-build}. The same could then be done for simulator by specifying \lstinline{SIMULATOR64}. This way to different frameworks are built. For combining multiple frameworks with different architectures there is XCFramework \cite{xcframework}. I have created a small shell script in \ref{xcframework-bundle} that creates a new XCFramework from frameworks necessary for the editor app. The built XCFrameworks could then be moved to Xcode.
+There is support for building for iOS platform in CMake directly. To save some upfront work I have used ios-cmake toolchain file that builds on top of CMake and makes the setup easier \cite{ios-cmake}. An example of how to build a framework for \lstinline{OS64} (iOS) is in \ref{cmake-build}. The same could then be done for a simulator by specifying \lstinline{SIMULATOR64}. This way two different frameworks are built. For combining multiple frameworks with different architectures there is XCFramework \cite{xcframework}. I have created a small shell script in \ref{xcframework-bundle} that creates a new XCFramework from frameworks necessary for the editor app. The built XCFrameworks could then be moved to Xcode.
 
 \begin{lstlisting}[caption=CMake build instructions, label=cmake-build]
 mkdir build
@@ -738,7 +737,7 @@ done
 
 \subsection{Objective-C and Swift Wrappers}
 
-With XCFrameworks in Xcode the next step was to write wrappers, so the C++ frameworks could be used in Swift code. As mentioned in chapter \ref{chap:design} it is not possible to interact with C++ code from Swift directly - for this Objective-C++ wrappers had to be written, exposing only Objective-C in its interface. To better encapsulate the wrappers I have also created a separate modules \lstinline{SwiftAutomataLibrary}. The most important part in Objective-C is present in \lstinline{NFA_objc} that interacts with ALT's \lstinline{EpsilonNFA} class. Its interface is in \ref{nfa-objc-interface}. It is initialized with all necessary data to create the underlying automaton and has one method that takes a list of symbols for input and returns \lstinline{bool} based on whether the input was accepted or rejected. In the implementation file all necessary conversions are done. E.g. states are passed to \lstinline{NFA_objc} as \lstinline{NSArray *} where the individual elements are \lstinline{NSString *}. This had to be converted to \lstinline{ext::set<std::string>}.
+With XCFrameworks in Xcode the next step was to write wrappers, so the C++ frameworks could be used in Swift code. As mentioned in chapter \ref{chap:design} it is not possible to interact with C++ code from Swift directly - for this Objective-C++ wrappers had to be written, exposing only Objective-C in its interface. To better encapsulate the wrappers I have also created a separate module \lstinline{SwiftAutomataLibrary}. The most important part in Objective-C is present in \lstinline{NFA_objc} that interacts with ALT's \lstinline{EpsilonNFA} class. Its interface is in \ref{nfa-objc-interface}. It is initialized with all necessary data to create the underlying automaton and has one method that takes a list of symbols for input and returns \lstinline{bool} based on whether the input was accepted or rejected. In the implementation file all necessary conversions are done. E.g. states are passed to \lstinline{NFA_objc} as \lstinline{NSArray *} where the individual elements are \lstinline{NSString *}. This had to be converted to \lstinline{ext::set<std::string>}.
 
 \begin{lstlisting}[caption={NFA\_objc interface}, label=nfa-objc-interface]
 - (instancetype)init: (NSArray *) states
@@ -749,7 +748,7 @@ With XCFrameworks in Xcode the next step was to write wrappers, so the C++ frame
 - (bool)simulate: (NSArray *) input;
 \end{lstlisting}
 
-The wrapper between Swift and Objective-C was then quite easier as conversions between a lot of types - such as \lstinline{NSArray *} and \lstinline{Array} are done automatically. It also would be possible to use \lstinline{NFA_objc} directly but to have better control I have created \lstinline{NFA} as simple Swift struct. This is the only part that was made public in the SwiftAutomataLibrary module.
+The wrapper between Swift and Objective-C was then more straightforward as conversions between a lot of types - such as \lstinline{NSArray *} and \lstinline{Array} - are done automatically. It also would be possible to use \lstinline{NFA_objc} directly but to have better control I have created \lstinline{NFA} as a simple Swift struct. This is the only part that was made public in the SwiftAutomataLibrary module.
 
 \section{App State}
 
@@ -757,7 +756,7 @@ I have already explained how the FA elements are recognized, rendered and how th
 
 \subsection{FA Models}
 
-There are two FA models - \lstinline{AutomatonTransition} and \lstinline{AutomatonState}. Notably, cycle does not have its separate model but is rather an \lstinline{AutomatonTransition}. But since it is rendered differently, it must be recognizable from a normal transition - for this there is \lstinline{enum TransitionType} that has two types - \lstinline{regular} and \lstinline{cycle}. \lstinline{AutomatonTransition} can be seen in \ref{transition-model}. The \lstinline{id} property is generated for each element at the moment when it is created, so it is easily distinguishable. The same is done for \lstinline{AutomatonState}.  Apart from what you see in the code snippet \lstinline{AuomatonTransition} has a set of computed properties like \lstinline{stroke}. Computed properties are great for keeping the state of the model consistent and should be used whenever a property's value can be derived from other properties of that model. \lstinline{AutomatonState} is similar to the transition with some specific properties like \lstinline{isFinalState} denoting whether a state is final or \lstinline{center} used to determine a state's center.
+There are two FA models - \lstinline{AutomatonTransition} and \lstinline{AutomatonState}. Notably, a cycle does not have its separate model but is rather an \lstinline{AutomatonTransition}. But since it is rendered differently, it must be recognizable from a normal transition - for this there is \lstinline{enum TransitionType} that has two types - \lstinline{regular} and \lstinline{cycle}. \lstinline{AutomatonTransition} can be seen in \ref{transition-model}. The \lstinline{id} property is generated for each element at the moment when it is created, so it is easily distinguishable. The same is done for \lstinline{AutomatonState}.  Apart from what you see in the code snippet \lstinline{AuomatonTransition} has a set of computed properties like \lstinline{stroke}. Computed properties are great for keeping the state of the model consistent and should be used whenever a property's value can be safely and in performant way derived from other properties of that model. \lstinline{AutomatonState} is similar to the transition with some specific properties like \lstinline{isFinalState} denoting whether a state is final or \lstinline{center} used to determine a state's center.
 
 \begin{lstlisting}[caption={Transition model}, label=transition-model]
 struct AutomatonTransition: Equatable, Identifiable, Codable {
@@ -797,7 +796,7 @@ struct AutomatonState: Equatable, Identifiable, Codable {
 
 \subsection{Simulating Input}
 
-Simulating automaton's input is the main feature of the prototype. Once a user taps on "Simulate" button, \lstinline{simulateInput} action is triggered. There some preliminary checks are made - such as there is an initial state (\ref{initial-state-check}. If a check failed, the app shows the user the exact reason why it failed to make it easier to correct it. In case all preliminary checks succeed, the action returns \lstinline{Effect} with the result of the simulation. \lstinline{Effect}s are a mechanism to interact with asynchronous functions and services in general. The initialization of the \lstinline{Effect} is in \ref{simulate-input-effect}. You can also see that a \lstinline{alaphatSymbols} variable is used there. Automaton's alphabet is constructed from the symbols defined for the automaton's transitions. In \lstinline{AutomataLibraryService} simulation is run on \lstinline{NFA} Swift wrapper that was discussed earlier. Only the mapping of \lstinline{transitions} property needed multiple lines of code due to the fact that a name of the state should be used instead of \lstinline{AutomatonState}'s \lstinline{id}.
+Simulating automaton's input is the main feature of the prototype. Once a user taps on "Simulate" button, \lstinline{simulateInput} action is triggered. There some preliminary checks are made - such as whether the FA has an initial state (\ref{initial-state-check}. If a check failed, the app shows the user the exact reason why it failed to make it easier to correct it. In case all preliminary checks succeed, the action returns \lstinline{Effect} with the result of the simulation. \lstinline{Effect}s are a mechanism to interact with asynchronous functions and services in general. The initialization of the \lstinline{Effect} is in \ref{simulate-input-effect}. You can also see that a \lstinline{alphabetSymbols} variable is used there. Automaton's alphabet is constructed from the symbols defined for the automaton's transitions. In \lstinline{AutomataLibraryService} simulation is run with \lstinline{NFA} Swift wrapper that was discussed earlier. Only the mapping of \lstinline{transitions} property needed multiple lines of code due to the fact that a name of the state should be used instead of \lstinline{AutomatonState}'s \lstinline{id}.
 
 \begin{lstlisting}[caption={Check for initiail state}, label=initial-state-check]
 guard
@@ -883,7 +882,7 @@ let splinePoints: [CGPoint] = (
 
 \subsection{Dragging States}
 
-States are dragged as a whole and thus their shape is not changed during that process - only variable in this process is a center of a given state. However, when a state has transitions connected to it, these transitions have to be changed as the state is dragged as well. There are three types of transitions that can be connected to a state - a transition that corresponds to incoming or outcoming edge and also a cycle. For cycles the app stores an angle between the single point that intersects with the state and a vector going from a center of the state and its topmost point. When the center is moved, the intersection point is recalculated with the angle that is stored in the app's state. For transitions other than cycles I take advantage of the \lstinline{flexPoint} and recompute \lstinline{startPoint} or \lstinline{endPoint} (depending on the transition) as the intersection point on the shortest path between the new center and the aforementioned \lstinline{flexPoint}. You can see that logic in \ref{compute-tippoint} for transitions that are the incoming edge.
+States are dragged as a whole and thus their shape is not changed during that process - only variable in this process is a center of a given state. However, when a state has transitions connected to it, these transitions have to be changed as the state is dragged as well. There are three types of transitions that can be connected to a state - a transition that corresponds to incoming or outcoming edge and a cycle. For cycles the app stores an angle between the single point that intersects with the state and a vector going from a center of the state and its topmost point. When the center is moved, the intersection point is recalculated with the angle that is stored in the app's state. For transitions other than cycles I take advantage of the \lstinline{flexPoint} and recompute \lstinline{startPoint} or \lstinline{endPoint} (depending on the transition) as the intersection point on the shortest path between the new center and the aforementioned \lstinline{flexPoint}. You can see that logic in \ref{compute-tippoint} for transitions that are the incoming edge.
 
 \begin{lstlisting}[caption={Calculation of new \lstinline{tipPoint}}, label=compute-tippoint]
 state.transitions
@@ -907,7 +906,7 @@ state.transitions
  
 \section{DocumentGroup}
 
-I have already outlined the intent to use document based app to enable saving the editor's state into a file. Leveraging the benefits of using the Composable Architecture, I was able to save the whole state as JSON. To make that happen I first had to conform \lstinline{EditorState} to a \lstinline{FileDocument} protocol. When a type conforms to this protocol it has to implement reading a file as well as saving it. The type must also declare on which extensions it will operate. For this app I have chosen the \lstinline{automaton} extension. This also ensures that user cannot open a file that does not have that same extension (which would lead to undefined behaviour). To actually make an app a document based one, it is necessary to wrap a root view into a \lstinline{DocumentGroup} scene \cite{documentgroup}. 
+I have already outlined the intent to use a document based app approach to enable saving the editor's state into a file. Leveraging the benefits of using the Composable Architecture, I was able to save the whole state as JSON. To make that happen, I first had to conform \lstinline{EditorState} to a \lstinline{FileDocument} protocol. When a type conforms to this protocol it has to implement reading a file as well as saving it. The type must also declare on which extensions it will operate. For this app I have chosen the \lstinline{automaton} extension. This also ensures that user cannot open a file that does not have that same extension (which would lead to undefined behaviour). To actually make an app a document based one, it is necessary to wrap a root view into a \lstinline{DocumentGroup} scene \cite{documentgroup}. 
 
 \lstinline{DocumentGroup} is initialized with two parameters. \lstinline{newDocument} that describes what data should a new document contain - for the FA editor it is a new editor state - and then \lstinline{editor} closure that has the currently opened document as an input and it should return a view for editing the document. You can see how that is done for the automata editor here: \ref{documentgroup}. It should be noted that apart from initializing a new \lstinline{EditorStore} for a given document, as well as modifying the file when the state changes, it is also desirable to save stores for documents that have already been opened in the current application run. This is to ensure that a store is not reinitialized when a state changes which would cancel all currently running effects. The stores are saved into a dictionary \lstinline{stores} where each store is identified by the unique state's id. The UI for document based app is in figure \ref{document-based-interface}.
 
@@ -957,7 +956,7 @@ Firstly, I will discuss how the app has been tested with automated tests. After 
 
 Automated testing is an important part of a software project to ensure everything is working correctly and no regressions are made during the development. It also increases the confidence of doing refactoring. The Composable Architecture unit testing is built on top of XCTest framework that is the bundled framework for testing Swift or Objective-C in Xcode. The goal of the testing in the Composable Architecture was to make tests more exhaustive, ergonomic and concise.
 
-The main component for testing in the Composable Architecture is \lstinline{TestStore}. This component has a method called \lstinline{send} that takes as an input an action and a closure in which you describe how you expect the state to be modified. There is also a \lstinline{receive} method that asserts receival of a new action not triggered by the user, but rather returned from an effect. An example showcasing both \lstinline{send} and \lstinline{receive} methods can be seen in \ref{test-state} - there \lstinline{strokesChanged} action is triggered first that simulates user drawing a stroke. When a stroke is drawn, it is sent to \lstinline{AutomataLibraryService} that returns effect with the recognized element (note that in the tests this compoment is mocked). When the new action \lstinline{automataShapeClassified} is received, we assert that it is added to the state.
+The main component for testing in the Composable Architecture is \lstinline{TestStore}. This component has a method called \lstinline{send} that takes as an input an action and a closure in which you describe how you expect the state to be modified. There is also a \lstinline{receive} method that asserts receival of a new action not triggered by the user, but rather returned from an effect. An example showcasing both \lstinline{send} and \lstinline{receive} methods can be seen in \ref{test-state} - there \lstinline{strokesChanged} action, that simulates a user drawing a stroke, is triggered first. When a stroke is drawn, it is sent to \lstinline{AutomataLibraryService} that returns \lstinline{Effect} with the recognized element (note that in the tests this compoment is mocked). When the new action \lstinline{automataShapeClassified} is received, I assert that it is added to the state.
 
 It should be noted that the paradigm of this style of unit testing is focused on flows, rather than individual functions where the test asserts output for a given input - although individual functions can still be tested by sending a single action to the test store and asserting the state's changes. This is in order to make tests more concise and be closer to how the app will be used by the user. It does not mean, however, that the tests can be less reliable because still a single component is tested and all non-deterministic functionality should be in the store's environment, which is mocked during the testing. 
 
@@ -992,11 +991,11 @@ store.receive(
 
 \section{Usability Testing}
 
-Usability testing does not have a strict definition but in general it should refer to testing that evaluates a product or system that is not automated. However, in a book Handbook of Usability Testing they have narrowed this down to "a process that employs people people as testing participants who are representative of the target audience to evaluate the degree to which a product meets specific usability criteria" \cite{handbook-usability-testing}. This book has also been used further in this section to define types of tests and their recommended techniques with which they should be conducted.
+Usability testing does not have a strict definition but in general it should refer to testing that evaluates a product or a system that is not automated. However, in Handbook of Usability Testing the authors have narrowed this down to "a process that employs people people as testing participants who are representative of the target audience to evaluate the degree to which a product meets specific usability criteria" \cite{handbook-usability-testing}. This book has also been used further in this section to define types of tests and their recommended techniques with which they should be conducted.
 
-In the book Handook of Usability Testing the authors divide usability tests into five distinct categories: exploratory, assesment, validation, and comparison. Each test differs by its acceptance criteria as well as in which phase of the development it should be done. As the final product of this thesis is a prototype, the exploratory test is the most suitable.
+In Handbook of Usability Testing the authors divide usability tests into four distinct categories: exploratory, assesment, validation, and comparison. Each test differs by its acceptance criteria and in which phase of the development it should be done. As the final product of this thesis is a prototype, the exploratory test is the most suitable one.
 
-The primary focus of exploratory tests should be on the main functionalities of the app and to assess answers to questions such as how intuitive the design is, how valuable is the product to the user, which functionality will need to be documented via a tutorial or help, etc. This type of test is also different from the others in that it is expected that the moderator conducting the test will communicate with the user extensively - whereas the other tests should be possible to finish without moderator stepping in.
+The primary focus of exploratory tests should be on the main functionalities of the app and to assess answers to questions such as how intuitive the design is, how valuable the product is for the user, which functionality will need to be documented via a tutorial or help, etc. This type of test is also different from the others in that it is expected that the moderator conducting the test will communicate with the user extensively - whereas the other tests should be possible to finish without the moderator stepping in.
 
 \subsection{Test Plan}
 
@@ -1018,7 +1017,7 @@ Before each test, the participants will be sent a questionnaire to assess their 
     \item How familiar are you with using Apple Pencil in productivity applications - such as note-taking, drawing, creating diagrams, etc.? (rated 1-5 where 5 is "expert")
     \item Could you provide examples of software that you use with Apple Pencil?
 \end{itemize}
-These questions, although self-evaluated, should give a clearer picture of the user's previous experience with either finite automata or using of iPad.
+These questions, although self-evaluated, should give a clearer picture of the user's previous experience with either finite automata or iPad usage.
 
 During the introduction to the test, participants will be asked to think aloud, if they are comfortable with it. It is beneficial to know the thinking process as that can uncover more about the prototype. Then the user will be asked to do five tasks. These tasks are of two types:
 \begin{itemize}
@@ -1098,7 +1097,7 @@ The second type of tests (tasks D and E) is more complicated and therefore it wi
 
 \subsection{Test Results}
 
-The tests have been done with a total of 8 participants. The results can be seen in \ref{test-results}. I have not included two questions in the table. One is whether the participant has prior experience with software for creating and editing finite automata - for which all answers have been "No". This indicates that most (in this case all) people have always used a regular paper for sketching their automata. The second question not included is examples of software that the participant has used with Apple Pencil: most of it were apps for making notes such as Notability or GoodNotes. From the time results the two fastest times are by people who rated themselves as FA "experts". In contrast with that is Apple Pencil familiarity having not a great impact on the time results. 
+The tests have been done with a total of 8 participants. The results can be seen in \ref{test-results}. I have not included two questions in the table. One is whether the participant has prior experience with software for creating and editing finite automata - for which all answers have been "No". This indicates that most (in this case all) people have always used a regular paper for sketching their automata. The second question not included is about examples of software that the participant has used with Apple Pencil: most of it were apps for making notes such as Notability or GoodNotes. From the time results the two fastest times are by people who rated themselves as FA "experts". In contrast with that is Apple Pencil familiarity having not a great impact on the time results. 
 
 The following list summarizes what the participants have said they did not understand and where the design was not intuitive enough:
 \begin{itemize}
@@ -1112,7 +1111,7 @@ The following list summarizes what the participants have said they did not under
 \end{itemize}
 Some of these points could be resolved by adding a quick tutorial and help that would introduce users into how the app should be used, rather than expecting users to figure it out on their own. The tutorial is also important due to the fact that states and transitions are not added via a button and thus the users need to try and see how the app responds to their drawing. This can be a daunting first experience. 
 
-The help feature was also mentioned, among other, as one of the following improvements mentioned by the participants:
+The help feature, among others, was also mentioned by the participants as one of the following improvements:
 \begin{itemize}
     \item Missing switch gesture for Apple Pencil.
     \item Back button to undo last change.
@@ -1122,17 +1121,18 @@ The help feature was also mentioned, among other, as one of the following improv
     \item It is not possible to make a state smaller.
     \item Make naming states not mandatory.
     \item Step-by-step simulation would help with visualization of how the FA works.
-    \item Edit mode to hide buttons.
+    \item Edit and presentation mode to hide and show buttons and text fields.
 \end{itemize}
-From this list, most of the items are small improvements and could be easily implemented into the app. I would like to expand on "step-by-step simulation". This feature would help with understanding better why the automaton rejected the input strings. It would also make it a great tool for learning and understanding how the automaton works. Implementing for DFAs should be possible as the automaton is always at one state only, making the visualization straightforward. However, for NFAs this is not the case. Therefore, the app could either offer to limit the automaton to a specific type or limit the visualization to only one possible path leading to rejection or acceptance. The usability testing has also uncovered bugs:
+From this list, most of the items are small improvements and could be easily implemented into the app. I would like to expand on "step-by-step simulation". This feature would help with understanding better why the automaton rejected the input strings. It would also make it a great tool for learning and understanding how the automaton works. Implementing for DFAs should be possible as the automaton is always at one state only, making the visualization straightforward. However, for NFAs this is not the case. Therefore, the app could either offer to limit the automaton to a specific type or limit the visualization to only one possible path leading to rejection or acceptance. The usability testing has also uncovered a few bugs:
 \begin{itemize}
-    \item Input by keyboard is sometimes inadvartently triggered.
+    \item Input by keyboard is sometimes inadvertently triggered.
     \item Cycle is often mistaken for a state.
     \item Eraser sometimes does not work.
     \item It is not possible to make a final state a non-final one without deleting it.
     \item When user taps the screen in quick succession, transitions appear in the same place.
     \item Text field for transitions does not trim newlines.
 \end{itemize}
+All of these bugs are tracked in the \href{project's repository}{https://github.com/fortmarek/automata-editor}.
 
 Apart from things that could be improved, at the end of each test I have asked the participants to say what they felt were good things about the app:
 \begin{itemize}
@@ -1146,7 +1146,7 @@ Apart from things that could be improved, at the end of each test I have asked t
     \item Connecting elements works well.
     \item Interacting with elements is intuitive.
 \end{itemize}
-The positive comments show that the basic interactions with the elements work well and offer enjoyable experience for the users. And apart from enjoyable experience it makes creating the automata quick - which is important to convince people to use the app, rather than resorting to a regular paper.
+The positive comments show that the basic interactions with the elements work well and offer enjoyable experience for the users. And apart from enjoyable experience it makes creating the finite automata quick - which is important to convince people to use the app, rather than resorting to a regular paper.
 
 \begin{figure}
 \begin{tabular}{||c|c|c|c||} 
@@ -1175,16 +1175,14 @@ The positive comments show that the basic interactions with the elements work we
 
 \chapter{Conclusion}
 
-\section{Goals Assessment}
+The primary goal of this thesis was to implement a prototype of an automata editor for iPad, built primarily for touch-based input and minimizing the need to use other UI controls such as buttons. The final prototype has focused on the Apple Pencil that offers a high level of precision while being easy to use. Most of the functionalities, like creating and editing FA elements, are done with the Apple Pencil, thus accomplishing the main goal. This was made possible by creating a custom ML model and using CoreML framework to classify the drawn FA elements.
 
-Assess my goals.
+The chosen Composable Architecture has proved to be beneficial for the project as it allowed easy testing as well as straightforward implementation of a document based app, which is an important feature for the users that was added on top of the originally outlined goals.
 
-\section{Thesis Contribution}
+For simulating the input I have successfully leveraged the ALT library, proving that it can be integrated into a Swift-based project and used in iOS applications. This integration also opens many possible future directions this project can take as it can tap into the many functionalities the library offers, such as export of automatons in DOT and PNG format or FA algorithms like determinization and removal of $\epsilon$-transitions.
 
-The contribution of this thesis is testing Algorithms Library Toolkit in practice and can now be pointed to for users who want to see its capabilities. The editor can now also be recommended in the course of BI-AAG at FIT CTU (and other universities) - for students and teachers alike.
+In the conducted usability testing, that has uncovered some minor issues with the prototype, it has also been suggested by some of the participants to add step-by-step simulation of the input, so the users can better visualize how the particular FA operates. This functionality would also have to be implemented in the ALT library by e.g. returning a trace of the individual steps taken by the FA. Another feature that has been raised during the testing was adding support for a pushdown automaton.
 
-\section{Future Work}
+One of the main motivations of this project was to help students learning FAs. To accomplish this, the prototype needs some smaller improvements but it is planned to publish it on the App Store before winter semester of a 2021/2022 school year, so it can be suggested to students taking the BI-AAG course at FIT CTU in Prague.
 
-Algorithms Library Toolkit is an extensive library and there are still capabilites that are not implemented in the editor.
-
-The choice of developing a native iOS application has resulted in good UX, but in the future it would be beneficial to broaden the possible audience and either develop a similar Android app or create a more ubiquituous web interface.
+The feedback I have been given in the usability testing has made it clear that the prototype, even in the current state, would be beneficial for students learning the FAs, therefore, I deem the prototype to be successful.
