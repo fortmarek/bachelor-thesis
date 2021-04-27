@@ -905,7 +905,48 @@ state.transitions
 }
 \end{lstlisting}
  
-\section{DOCUMENTGROUP!}
+\section{DocumentGroup}
+
+I have already outlined the intent to use document based app to enable saving the editor's state into a file. Leveraging the benefits of using the Composable Architecture, I was able to save the whole state as JSON. To make that happen I first had to conform \lstinline{EditorState} to a \lstinline{FileDocument} protocol. When a type conforms to this protocol it has to implement reading a file as well as saving it. The type must also declare on which extensions it will operate. For this app I have chosen the \lstinline{automaton} extension. This also ensures that user cannot open a file that does not have that same extension (which would lead to undefined behaviour). To actually make an app a document based one, it is necessary to wrap a root view into a \lstinline{DocumentGroup} scene \cite{documentgroup}. 
+
+\lstinline{DocumentGroup} is initialized with two parameters. \lstinline{newDocument} that describes what data should a new document contain - for the FA editor it is a new editor state - and then \lstinline{editor} closure that has the currently opened document as an input and it should return a view for editing the document. You can see how that is done for the automata editor here: \ref{documentgroup}. It should be noted that apart from initializing a new \lstinline{EditorStore} for a given document, as well as modifying the file when the state changes, it is also desirable to save stores for documents that have already been opened in the current application run. This is to ensure that a store is not reinitialized when a state changes which would cancel all currently running effects. The stores are saved into a dictionary \lstinline{stores} where each store is identified by the unique state's id. The UI for document based app is in figure \ref{document-based-interface}.
+
+\begin{lstlisting}[caption={DocumentGroup scene}, label=documentgroup]
+private final class DocumentStore {
+    var stores: [UUID: EditorStore] = [:]
+}
+
+@main
+struct AutomataEditorApp: App {
+    private var documentStore = DocumentStore()
+    
+    var body: some Scene {
+        DocumentGroup(
+            newDocument: EditorState()
+        ) { file -> EditorView in
+            let store = documentStore.stores[file.document.id] 
+            ?? EditorStore(
+                initialState: file.document,
+                reducer: editorReducer,
+                environment: EditorEnvironment(...)
+            )
+            documentStore.stores[file.document.id] = store
+            
+            return EditorView(
+                set: {
+                    file.document = $0
+                },
+                store: store
+            )
+        }
+    }
+}
+\end{lstlisting}
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{document-based}
+    \caption{Document based app interface}\label{document-based-interface}
+\end{figure}
 
 \chapter{Testing}
 \label{chap:testing}
