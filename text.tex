@@ -797,7 +797,7 @@ struct AutomatonState: Equatable, Identifiable, Codable {
 
 Simulating the automaton's input is the main feature of the prototype. Once a user taps on "Simulate" button, \lstinline{simulateInput} action is triggered. There some preliminary checks are made - such as whether the FA has an initial state (\ref{initial-state-check}. If a check failed, the app shows the user the exact reason why it failed to make it easier to correct it. In case all preliminary checks succeed, the action returns \lstinline{Effect} with the result of the simulation. \lstinline{Effect}s are a mechanism to interact with asynchronous functions and services in general. The initialization of the \lstinline{Effect} is in \ref{simulate-input-effect}. You can also see that a \lstinline{alphabetSymbols} variable is used there. Automaton's alphabet is constructed from the symbols defined for the automaton's transitions. In \lstinline{AutomataLibraryService} simulation is run with \lstinline{NFA} Swift wrapper that was discussed earlier. Only the mapping of \lstinline{transitions} property needed multiple lines of code because a name of the state should be used instead of \lstinline{AutomatonState}'s \lstinline{id}.
 
-\begin{lstlisting}[caption={Check for initiail state}, label=initial-state-check]
+\begin{lstlisting}[caption={Check for initial state}, label=initial-state-check]
 guard
     let initialState = state.initialStates.first
 else {
