@@ -340,7 +340,7 @@ Apple's CoreML framework supports a variety of use cases - analysis of images, p
 
 Considering that CoreML is bundled in the system and Google ML Kit needs to be installed separately, increasing the app's size and incurring the maintenance burden, I have opted for CoreML. This decision has also been made based on the fact that both frameworks do support TensorFlow, although, for CoreML it needs to be first converted to its format.
 
-\subsection{Creation of CoreML Model}
+\subsection{Creating the CoreML Model}
 
 There are multiple ways how to create a CoreML model, though, they generally fall into two categories:
 \begin{itemize}
@@ -494,6 +494,8 @@ For transitions that do not have states on both sides, it must be possible to co
 \subsection{Simulating Input}
 
 The only missing functionality that I have not yet touched upon is simulating input. Considering that a FA is drawn, the user should be able to write their desired input into a text field and see whether the input string has or has not been accepted. That can be done via tapping a button with the title "Simulate". If the FA accepts the input, the output is denoted with the checkmark emoji (\ref{simulate-accept}) and if not, it is denoted with the cross emoji (\ref{simulate-reject}). For convenience, there is a button to erase the last character.
+
+As the currently edited automaton is saved into a custom model specific to the editor app, it is also necessary to convert it to ALT's model and then run the simulation on the ALT model. Before doing so, checks to ensure the automaton is valid are made - such as whether it has an initial state or if all the symbols of the input are in the FA's alphabet. The alphabet itself is constructed by going through the automaton's transitions and adding their symbols. After the conversion is done, the input is simulated on the ALT's FA model and then it is discarded. It is important to note that the ALT model is always recreated when the user simulates a given input.
 
 \begin{figure}
     \includegraphics[width=\textwidth]{simulate-accept}
@@ -959,7 +961,7 @@ The main component for testing in the Composable Architecture is \lstinline{Test
 
 It should be noted that the paradigm of this style of unit testing is focused on flows, rather than individual functions where the test asserts output for a given input - although individual functions can still be tested by sending a single action to the test store and asserting the state's changes. This is to make tests more concise and be closer to how the app will be used by the user. It does not mean, however, that the tests can be less reliable because still a single component is tested and all non-deterministic functionality should be in the store's environment, which is mocked during the testing. 
 
-\begin{lstlisting}[caption={Testing creation of state}, label=test-state]
+\begin{lstlisting}[caption={Testing creating of state}, label=test-state]
 store.send(
     .strokesChanged(
         currentStrokes + [
