@@ -366,7 +366,7 @@ Creating a touch-friendly web interface would have the benefit of being universa
 
 \section{Used Technologies}
 
-I will now cover which technologies are used in the app and why I have chosen them. A lot of decisions have been influenced by focusing on iPad and, even more specifically, by targeting iPad devices along with Apple Pencil. 
+I will now cover which technologies are used in the app and why I have chosen them. A lot of decisions have been influenced by focusing on the iPad and, even more specifically, by targeting iPad devices along with the Apple Pencil. 
 
 \subsection{Language}
 
@@ -377,13 +377,19 @@ Choosing a language in which one will write the application is an important firs
     \item cross-platform framework
 \end{itemize}
 
-Objective-C was designed by Brad J. Cox at the start of the 1980s and was then licensed by NeXT Software in 1988. Then in 1996 NeXT Software was acquired by Apple - along with Objective-C. Apple has then chosen Objective-C as the main language for OS X and in 2007 for the new operating system iOS \cite{objective-c-programming}. On the Apple developer website it is described as "superset of the C programming language and provides object-oriented capabilities and a dynamic runtime" \cite{objective-c}. Objective-C has been thus the main programming language for years. Nowadays, Objective-C is not anymore that popular and ranks 23rd in the language popularity as per TIOBE index \cite{tiobe-index}. Apple has rather shifted their focus to Swift and some of the new frameworks, like SwiftUI \cite{swiftui}, are only available in Swift. Swift makes for a much better option if one is starting a new iOS app.
+Objective-C was designed by Brad J. Cox at the start of the 1980s and was then licensed by NeXT Software in 1988. Then in 1996 NeXT Software was acquired by Apple - along with Objective-C. Apple has then chosen Objective-C as the main language for OS X and in 2007 for the new operating system iOS \cite{objective-c-programming}. On the Apple developer website it is described as "superset of the C programming language and provides object-oriented capabilities and a dynamic runtime" \cite{objective-c}. Objective-C has been thus the main programming language for years. Nowadays, Objective-C is not anymore that popular and ranks 23rd in the language popularity as per TIOBE index \cite{tiobe-index}. Apple has rather shifted their focus to Swift and some of the new frameworks, like SwiftUI \cite{swiftui}, are only available in Swift. Swift is therefore a much better option if one is starting a new iOS app.
 
-Using a cross-platform framework - such as React Native \cite{react-native} or Flutter \cite{flutter} - was also a possibility. But to leverage Apple Pencil fully it was necessary to use PencilKit \cite{pencilkit} and for this one would have to write native code. Therefore, I have decided to use Swift as the main language.
+Using a cross-platform framework - such as React Native \cite{react-native} or Flutter \cite{flutter} that are written in Javascript and Dart, respectively - was also a possibility. But to leverage the Apple Pencil fully it was necessary to use PencilKit \cite{pencilkit} and for interacting with that framework one would have to write native code. Thus, I have decided to use Swift as the main language.
 
 \subsection{UI Framework}
 
 At the time of writing it is possible to use two UI frameworks offered by Apple to write UI code. Those are UIKit \cite{uikit} or, already mentioned, SwiftUI \cite{swiftui}. SwiftUI is a newer framework than UIKit, released in 2019 \cite{swiftui-release}. In the Thinking in SwiftUI book it is described as a "radical departure from UIKit, AppKit, and other object-oriented UI frameworks" \cite{thinking-in-swiftui}. SwiftUI offers a more declarative approach, quite similar to React \cite{react} used in the web development. Declarative UIs have the benefit of less code since it enables the framework to do more on behalf of the developer. This comes at a cost of lesser control. Getting back to SwiftUI, specifically, one of its major drawbacks is that not all components, that are written in UIKit, are available in SwiftUI. But there is very strong support for SwiftUI-UIKit interoperability \cite{swiftui-interop} and thus it is always possible to use UIKit when necessary. The fact that SwiftUI offers faster development due to its declarative nature and SwiftUI previews \cite{swiftui-preview} has made it a better candidate than UIKit, especially for a prototype. Therefore, I have decided to use SwiftUI as the main UI framework.
+
+\subsection{PencilKit}
+
+I have already mentioned the PencilKit framework but it is not the only way how to let users draw with either their finger or Apple Pencil. One can also use CGContext which is a "Quartz 2D drawing environment" \cite{cgcontext}. For drawing in CGContext it is necessary to observe user's touches and draw a path based on those touches. CoreGraphics framework, which CGContext is a part of, does not bundle any component that would handle the drawing for the developer \cite{coregraphics}. PencilKit, however, has a component called \lstinline{PKCanvasView} \cite{pkcanvasview}. By using this component, the PencilKit framework handles for us how to draw strokes made by the user. \lstinline{PKCanvasViewDelegate} enables listening to changes of the drawing. The \lstinline{drawing} property of type \lstinline{PKDrawing} then allows for programmatic modifications of the drawing - which will be used to render the FA elements after they are recognized.
+
+For the purposes of the prototype, PencilKit is a better fit because it offers more by default while still allowing for minor modifications. If some more custom behavior of e.g. rendering strokes was needed, though, it would be necessary to use the CoreGraphics framework. To make a possible migration between those frameworks as seamless as possible, the PencilKit framework should be well-contained.
 
 \subsection{Architecture}
 
@@ -394,7 +400,7 @@ One possible architecture is MVVM \cite{mvvm}. A diagram of this architecture ca
 One of concrete implementations of Redux architecture is the Composable Architecture by Point-Free \cite{tca}. This architecture is based on Redux but it has some modifications such as handling of side effects. It also makes testing more exhaustive by asserting that no action that you do not expect is run, as well as that the state is not changed in any other way than you describe in your test. Considering all of the above, I have chosen to use the Composable Architecture. 
 
 \begin{figure}
-    \includegraphics[width=\textwidth]{mvvm}
+    \includegraphics[width=\textwidth]{MVVM}
     \caption{MVVM architecture diagram \cite{mvvm}}\label{mvvm}
 \end{figure}
 
