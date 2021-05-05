@@ -76,12 +76,12 @@ Formal language L over an alphabet $\Sigma$ is any subset of all the strings ove
 For a binary alphabet $\Sigma$ = \{0, 1\} a formal language over $\Sigma$ is then subsets of \textit{all} binary strings. We can denote the language either by:
 \begin{itemize}
     \item enumeration notation where all possible strings in the language are listed, e.g.: $\textit{L}_1 = \{\epsilon\}, \textit{L}_2 = \{1\}, \textit{L}_3 = \{0, 00, 000, 01\}$.
-    \item set-builder notation where the languages are described in the following way: \{ w $\mid$ something about w \}. Examples are: $\textit{L}_4 = \{\textit{w} \mid \textit{w} \in {0,1}^* \wedge \left|\textit{w}\right| mod 2 = 0\}$, $\textit{L}_5 = \{0^\textit{n}1^\textit{n} : \textit{n} \in \mathbb{N}_0\}$.
+    \item set-builder notation where the languages are described in the following way: \{ w $\mid$ something about w \}. Examples are: $\textit{L}_4 = \{\textit{w} \mid \textit{w} \in {0,1}^* \wedge \left\lvert \textit{w} \right\rvert \mod 2 = 0\}$, $\textit{L}_5 = \{0^\textit{n}1^\textit{n} : \textit{n} \in \mathbb{N}_0\}$.
 \end{itemize}
 
 \subsection{Grammar}
 
-Grammars are used to describe languages. You can find how they are defined below:
+Grammars are used to generate languages. You can find how they are defined below:
 
 \begin{definition}
     \textit{Grammar} is a quadruple of G = (N, $\Sigma$, P, S) where:
@@ -115,7 +115,7 @@ Grammars are divided into four classes where they differ in their production rul
     \centerline{$\alpha\textit{A}\beta \rightarrow \gamma$ ($\alpha, \beta, \gamma \in (\textit{N} \cup \Sigma)^*$, $\textit{A} \in \textit{N}$)}
     \item \textit{Context-sensitive} (type 1), if every rule is in the form of:
 
-    \centerline{$\gamma\textit{A}\delta \rightarrow \gamma\alpha\delta$ ($\gamma, \delta \in (\textit{N} \cup \Sigma)^*$, $\textit{a} \in (\textit{N} \cup \Sigma)^+$)}
+    \centerline{$\gamma\textit{A}\delta \rightarrow \gamma\alpha\delta$ ($\gamma, \delta \in (\textit{N} \cup \Sigma)^*$, $\textit{A} \in \textit{N}$, $\alpha \in (\textit{N} \cup \Sigma)^+$)}
     or in the form of $\textit{S} \rightarrow \epsilon$ if \textit{S} is not present on the right hand side of any rule of a given grammar.
     \item \textit{Context-free grammar} (type 2) if every rule is in the form of:
 
@@ -132,10 +132,10 @@ Classification of languages, also known as the Chomsky hierarchy, has the follow
     We say that language is:
 \end{definition}
 \begin{enumerate}
-    \item \textit{formal} if it is a formal language but is neither regular, context-free, context-sensitive, nor recursive enumerable. These languages are not recognized by a Turing machine.
+    \item \textit{formal} if it is a formal language but is neither regular, context-free, context-sensitive, nor recursive enumerable. These languages are not accepted by a Turing machine.
     \item \textit{recursively enumerable} if and only if $\exists$ unrestricted grammar which generates it
     \begin{itemize}
-        \item recognized by a Turing machine
+        \item accepted by a Turing machine
     \end{itemize}
     \item \textit{context-sensitive} if and only if $\exists$ context-sensitive grammar which generates it
     \begin{itemize}
@@ -176,8 +176,8 @@ $\delta$ for a nondeterministic finite automaton (NFA) is defined as:\\
 \centerline{$\delta$ is a mappping from \textit{Q} $\times$ $\Sigma$ into the set of all subsets \textit{Q} (denoted by $2^\textit{Q}$)}
 Expanding upon the difference between the definitions of the transition function:
 \begin{itemize}
-    \item DFA can only transition from one state to another, e.g. from $\textit{q}_0$ to $\textit{q}_1$ ($\textit{q}_0$, $\textit{q}_1$ $\in$ \textit{Q})
-    \item NFA can transition to a set of states, e.g. from $\textit{q}_0$ to $\textit{q}_1$ ($\textit{q}_0$, $\textit{q}_1$, $\textit{q}_2$ $\in$ \textit{Q})
+    \item DFA can only transition from one state to another, e.g. from $\textit{q}_2$ to $\textit{q}_3$ ($\textit{q}_2$, $\textit{q}_3$ $\in$ \textit{Q})
+    \item NFA can transition to a set of states, e.g. from $\textit{q}_1$ to $\textit{q}_1$, $\textit{q}_2$ ($\textit{q}_1$, $\textit{q}_2$ $\in$ \textit{Q})
 \end{itemize}
 If we change the definition of NFA's $\delta$ to a mapping from \textit{Q} $\times$ ($\Sigma \cup \{\epsilon\}$) we allow, what are called, $\epsilon$-transitions that allow us to move to a different state while not reading any input from the tape. This finite automaton is then called a \textit{nondeterministic finite automaton with $\epsilon$-transitions}.
 
@@ -189,7 +189,7 @@ Finite automata's transition functions $\delta$ are generally represented in the
     (NFA) $\delta$(\textit{S}, 0) = \{\textit{S}, \textit{A}\} (transition from the state \textit{S} and symbol 0 to the states \textit{S} and \textit{A})\\
     (DFA) $\delta$(\textit{A}, 0) = \textit{B} (transition from the state \textit{A} and symbol 0 to a single state, not a set of states, \textit{B})
     \item \textit{Weighted directed graph} (state diagram)\\
-    Automata can be represented graphically as directed weighted graphs. Each state is represented as a vertice in the graph and final states are recognized by being a double circle, instead of a single one. Initial state is the one with an incoming edge. The transitions are then directed edges between states. You can see a FA represented as a weighted directed graph in \ref{graph-representation}.
+    Automata can be represented graphically as directed weighted graphs. Each state is represented as a vertice in the graph and final states are recognized by being a double circle, instead of a single one. Initial state is the one with an arrow that points to the state but does not start anywhere - it is often additionaly denoted with \textit{start}. The transitions are then directed edges between states. You can see a FA represented as a weighted directed graph in \ref{graph-representation}.
     \item \textit{Table}\\
     Table representation has in the first column all states where initial state is marked with $\rightarrow$ while final states are marked with $\leftarrow$. In the first row, excluding the first column, there are symbols of the alphabet, $\Sigma$. In the rest of the rows are states (or a set of states) that will be transitioned to on a given input (defined in the first row). You can see an example of it in \ref{table-representation}.
 \end{itemize}
@@ -198,11 +198,10 @@ Finite automata's transition functions $\delta$ are generally represented in the
     \node[state, initial] (q1) {$q_1$};
     \node[state, accepting, right of=q1] (q2) {$q_2$};
     \node[state, right of=q2] (q3) {$q_3$};
-    \draw   (q1) edge[loop above] node{0} (q1)
+    \draw   (q1) edge[loop above] node{0, 1} (q1)
             (q1) edge[above] node{1} (q2)
-            (q2) edge[loop above] node{1} (q2)
             (q2) edge[bend left, above] node{0} (q3)
-            (q3) edge[bend left, below] node{0, 1} (q2);
+            (q3) edge[bend left, below] node{1} (q2);
 \end{tikzpicture}
 \caption{FA graph representation}\label{graph-representation}
 \end{figure}
@@ -211,11 +210,11 @@ Finite automata's transition functions $\delta$ are generally represented in the
     \hline
     $\delta_{NFA}$ & 0 & 1 \\ [0.5ex] 
     \hline\hline
-    $\rightarrow \textit{S}$ & S & \textit{S}, \textit{A} \\ 
+    $\rightarrow \textit{q}_1$ & $\textit{q}_1$ & $\textit{q}_1$, $\textit{q}_2$ \\ 
     \hline
-    \textit{A} & \textit{B} & \\
+    $\leftarrow \textit{q}_2$ & $\textit{q}_3$ & \\
     \hline
-    $\leftarrow \textit{B}$ &  & \\
+    $\textit{q}_3$ &  & $\textit{q}_2$ \\
     \hline
 \end{tabular}
 \caption{FA table representation}\label{table-representation}
@@ -325,7 +324,7 @@ bool addTransition (
 
 \subsection{FA Algorithms}
 
-ALT offers multitude of algorithms that can be run on finite automata - such as minimization, determinization, and simulating input. Simulating input can be found in \lstinline{Accept.h} and \lstinline{Run.h} where the former is able to determine whether an input is accepted and the latter does the same but a part of its output also includes in which states did the simulation end in.
+ALT offers multitude of algorithms that can be run on finite automata - such as minimization, determinization, and simulating input. Simulating input can be found in \lstinline{Accept.h}, \lstinline{Result.h}, \lstinline{Occurrences.h}, and \lstinline{Run.h}. \lstinline{Accept.h} returns a simple boolean indicating whether the input has been accepted or rejected. \lstinline{Result.h} returns a state where the simulation ended and \lstinline{Occurrences.h} returns a set of indexes where the automaton has passed a final state. \lstinline{Run.h}'s returned value is then combination of \lstinline{Accept.h} and \lstinline{Result.h} where it contains both whether the automaton has accepted or rejected the input and in which state has the simulation ended.
 
 \section{Strokes Recognition}
 
@@ -390,7 +389,7 @@ At the time of writing it is possible to use two UI frameworks offered by Apple 
 
 There is no recommended architecture by Apple for apps written on top of SwiftUI frameworks. It is also entirely possible to create an app without adhering to any architecture. This code, though, is then more difficult to maintain for a longer period.
 
-One possible architecture is MVVM \cite{mvvm}. Diagram of this architecture can be seen in figure \ref{mvvm}. It enables developers to have a clear boundary between UI code and business logic and is a good option for either UIKit or SwiftUI applications. One of its drawbacks is that it can sometimes lead to imperative code where developers call a function and act based on its inputs. The alternative are (among others) architectures inspired by Redux. Diagram of Redux is depicted in figure \ref{redux}. The main difference between Redux and MVVM is that MVVM is event-driven, whereas Redux is data-driven. Data-driven approach is much more closer to declarative programming since the state of the application describes how it should look. Thus I have decided that Redux-like architecture will be a better option.
+One possible architecture is MVVM \cite{mvvm}. Diagram of this architecture can be seen in figure \ref{mvvm}. It enables developers to have a clear boundary between UI code and business logic and is a good option for either UIKit or SwiftUI applications. One of its drawbacks is that it can sometimes lead to imperative code where developers call a function and act based on its inputs. The alternatives are (among others) architectures inspired by Redux. Diagram of Redux is depicted in figure \ref{redux}. The main difference between Redux and MVVM is that MVVM is event-driven, whereas Redux is data-driven. Data-driven approach is much more closer to declarative programming since the state of the application describes how it should look. Thus I have decided that Redux-like architecture will be a better option.
 
 One of concrete implementations of Redux architecture is the Composable Architecture by Point-Free \cite{tca}. This architecture is based on Redux but it has some modifications such as handling of side effects. It also makes testing more exhaustive by asserting that no action that you do not expect is run, as well as that the state is not changed in any other way than you describe in your test. Considering all of the above, I have chosen to use the Composable Architecture. 
 
@@ -406,7 +405,7 @@ One of concrete implementations of Redux architecture is the Composable Architec
 
 \section{ALT Integration}
 
-I have already talked about ALT in chapter \ref{chap:analysis}. I have not discussed there, however, how ALT will be integrated in the application. That is now possible as I have stated that the app will be written in Swift. As already mentioned, ALT is a library written in C++. There exists a Swift-C++ interoperability manifesto \cite{swift-c++-manifesto} but this manifesto only goes over what it would take to make C++ and Swift interoperable but not even all functionalities of C++ have their discussions of how they could be ported to Swift. However, there is a well-supported interoperability between Swift and Objective-C \cite{swift-objc-interoperability}. For Objective-C and C++ interoperability there is a language iteration of Objective-C called Objective-C++. It is even e.g. possible to "include pointers to Objective-C objects as data members of C++ classes" \cite{objc++}. I first tried to integrate ALT directly and compile it right via Xcode but due to the fact that ALT is built via CMake \cite{cmake} and does not have a simple setup, I then resorted to pre-building the necessary modules and then bundling them in the application. I will go over the details in chapter \ref{chap:implementation}.
+I have already talked about ALT in chapter \ref{chap:analysis}. I have not discussed there, however, how ALT will be integrated in the application. That is now possible as I have stated that the app will be written in Swift. As already mentioned, ALT is a library written in C++. There exists a Swift-C++ interoperability manifesto \cite{swift-c++-manifesto} but this manifesto only goes over what it would take to make C++ and Swift interoperable but not even all functionalities of C++ have their discussions of how they could be ported to Swift. However, there is a well-supported interoperability between Swift and Objective-C \cite{swift-objc-interoperability}. For Objective-C and C++ interoperability there is a language iteration of Objective-C called Objective-C++. It is even e.g. possible to "include pointers to Objective-C objects as data members of C++ classes" \cite{objc++}. I first tried to integrate ALT directly and compile it right via Xcode. Due to the fact that ALT is built via CMake \cite{cmake} and does not have a simple setup, I then resorted to pre-building the necessary modules and afterwards bundling them in the application. I will go over the details in chapter \ref{chap:implementation}.
 
 \section{User Interface}
 
@@ -527,7 +526,7 @@ Users should also be able to save their automata and even share them with other 
 \chapter{Implementation}
 \label{chap:implementation}
 
-I have laid out a basic overview of how the app is designed to look and work. In this chapter I shall go into details of how the most important parts of the app have been implemented. You can also see the source code either in the attached SD card or in the \href{project's repository}{https://github.com/fortmarek/automata-editor}.
+I have laid out a basic overview of how the app is designed to look and work. In this chapter I shall go into details of how the most important parts of the app have been implemented. You can also see the source code either in the attached SD card or in the \href{https://github.com/fortmarek/automata-editor}{project's repository}.
 
 \section{ML Model}
 
