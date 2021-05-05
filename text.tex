@@ -275,7 +275,7 @@ This finite automata editor is called Statemaker and you can see a screenshot of
     \item Import and export automaton in supported formats.
     \item Automatic positioning of transitions and states.
 \end{itemize}
-All of the above features work reliably and are done in an intuitive manner - user can quickly understand how to work with all the components. The most notable missing feature is the easy simulation of input - this can be done via the ALT web interface but if someone is looking for only editing FAs and simulating whether the input string is accepted, they have to transition between two interfaces. The benefit is that they can then tap into all the other functionality that ALT offers. The author of Statemaker has chosen React and Typescript as underlying technologies \cite{state-maker}.
+All of the above features work reliably and are done in an intuitive manner - a user can quickly understand how to work with all the components. The most notable missing feature is the easy simulation of input - this can be done via the ALT web interface but if someone is looking for only editing FAs and simulating whether the input string is accepted, they have to transition between two interfaces. The benefit is that they can then tap into all the other functionality that ALT offers. The author of Statemaker has chosen React and Typescript as underlying technologies \cite{state-maker}.
 
 \begin{figure}
     \includegraphics[width=\textwidth]{statemaker}
@@ -324,7 +324,22 @@ bool addTransition (
 
 \subsection{FA Algorithms}
 
-ALT offers a multitude of algorithms that can be run on finite automata - such as minimization, determinization, and simulating input. Simulating input can be found in \lstinline{Accept.h}, \lstinline{Result.h}, \lstinline{Occurrences.h}, and \lstinline{Run.h}. \lstinline{Accept.h} returns a simple boolean indicating whether the input has been accepted or rejected. \lstinline{Result.h} returns a state where the simulation ended and \lstinline{Occurrences.h} returns a set of indexes where the automaton has passed a final state. \lstinline{Run.h}'s returned value is then a combination of \lstinline{Accept.h} and \lstinline{Result.h} where it contains both whether the automaton has accepted or rejected the input and in which state has the simulation ended.
+ALT offers a multitude of algorithms that can be run on finite automata - such as minimization, determinization, and simulating input. Simulating input can be found in \lstinline{Accept.h}, \lstinline{Result.h}, \lstinline{Occurrences.h}, and \lstinline{Run.h} that contain classes of the same name. \lstinline{Accept} has a method called \lstinline{accept} that returns a simple boolean indicating whether the input has been accepted or rejected. \lstinline{Result}'s \lstinline{result} method returns a state where the simulation ended and \lstinline{Occurrences}'s \lstinline{occurences} method returns a set of indices where the automaton has passed a final state. \lstinline{Run}'s returned value is then a combination of \lstinline{Accept} , \lstinline{Result} and \lstinline{Occurences} where it contains the combined output of all those classes. The \lstinline{Run}'s function \lstinline{calculateStates} can be seen in \ref{calculate-states}.
+
+\begin{lstlisting}[language=C++, caption=Run's calcuteStates function, label=calculate-states]
+template < class SymbolType, class StateType >
+static ext::tuple < 
+    bool, 
+    ext::set < StateType >, 
+    ext::set < unsigned > 
+> calculateStates ( 
+    const automaton::EpsilonNFA < 
+        SymbolType, 
+        StateType 
+    > & automaton, 
+    const string::LinearString < SymbolType > & string
+);
+\end{lstlisting}
 
 \section{Strokes Recognition}
 
